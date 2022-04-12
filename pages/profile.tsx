@@ -1,9 +1,93 @@
+import Link from "next/link";
+import { Card, Nav, Button } from "react-bootstrap";
+import { Layout } from "../components/layout"
+import styles from "../styles/Home.module.css";
+
 
 
 const Profile: React.FC = () => {
   return(
     <>
-      <h2>Hello World</h2>
+    <Layout>
+      <h2>Bonjour Yohan</h2>
+      <ul>
+        <h4>13 parties</h4>
+        <h4>6 victoires</h4>
+        <h4>Classement général : 3e</h4>
+      </ul><br></br>
+
+    <h3 className={styles.title}>Choisis ton mode de jeu</h3><br></br>
+
+    <Card className="cardProfile">
+  <Card.Header>
+    <Nav variant="tabs" defaultActiveKey="#first">
+      <Nav.Item>
+        <Nav.Link href="#first">Général</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="#link">Règles</Nav.Link>
+      </Nav.Item>
+
+    </Nav>
+  </Card.Header>
+  <Card.Body>
+    <Card.Title>Jeu complet</Card.Title>
+    <Card.Text>
+      Défis tes amis ou l&apos;IA dans une partie en 3 manches et devient le champion <br></br>
+      9 points gagnants &rarr; 4 à la suite &rarr; Face à face
+    </Card.Text>
+    <Link href="#" passHref={true}>
+    <Button variant="primary">Commencez à jouer &rarr;</Button>
+    </Link>
+  </Card.Body>
+</Card><br></br>
+
+<h3 className={styles.title}>Entrainement</h3><br></br>
+
+<div className="column" >
+<div className="row" style={{textAlign : "center", marginLeft: "100px", marginRight: "100px"}} >
+<Card style={{ width: '18rem' }}>
+  <Card.Img variant="top" src="/images/neuf-points-gagnants.jpeg" />
+  <Card.Body>
+    <Card.Title>9 Points gagnants</Card.Title>
+    <Card.Text>
+      Rapidité ! Les 3 premiers joueurs à obtenir 9 points se qualifient
+    </Card.Text>
+    <Link href="#" passHref={true}>
+    <Button variant="primary">Commencez à jouer &rarr;</Button>
+    </Link>
+  </Card.Body>
+</Card>
+
+<Card style={{ width: '18rem' }}>
+  <Card.Img variant="top" src="/images/quatreàlasuite.jpg" />
+  <Card.Body>
+    <Card.Title>4 à la suite </Card.Title>
+    <Card.Text>
+      Celui qui répond aux plus de questions successivement se qualifie
+    </Card.Text>
+    <Link href="#" passHref={true}>
+    <Button variant="primary">Commencez à jouer &rarr;</Button>
+    </Link>
+  </Card.Body>
+</Card>
+
+<Card style={{ width: '18rem' }}>
+  <Card.Img variant="top" src="/images/faceàface.jpg" />
+  <Card.Body>
+    <Card.Title>Face à face</Card.Title>
+    <Card.Text>
+      Le premier à 12 points remporte la partie
+    </Card.Text>
+    <Link href="#" passHref={true}>
+    <Button variant="primary">Commencez à jouer &rarr;</Button>
+    </Link>
+  </Card.Body>
+</Card>
+</div>
+</div>
+
+    </Layout>
     </>
   )
 }
