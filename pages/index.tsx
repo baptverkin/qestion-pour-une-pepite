@@ -1,27 +1,50 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import { useUser } from "@auth0/nextjs-auth0";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { Layout } from "../components/layout";
 import styles from "../styles/Home.module.css";
+import { getDatabase } from "../src/database";
+import { getSession } from "@auth0/nextjs-auth0";
 
-const Home: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = getSession(req, res);
+  const email = session?.user.email;
+
+  const mongodb = await getDatabase();
+  const response = await mongodb
+    .db()
+    .collection("users")
+    .findOne({ email: email });
+  const userDB = JSON.parse(JSON.stringify(response));
+
+  return {
+    props: {
+      userDB: userDB,
+    },
+  };
+};
+
+const Home: React.FC<{ userDB: any }> = ({ userDB }) => {
   return (
     <Layout>
       <div className={styles.container}>
         <main className={styles.main}>
           <h3 className={styles.title}>
-            Bienvenue sur la plateforme officielle de <br></br>Question pour une
-            Pépite
+            Bienvenue sur la plateforme officielle de <br />
+            Question pour une Pépite
           </h3>
-          <br></br>
-          <br></br>
+          <p>
+            {userDB ? `Joueur actuellement connecté : ${userDB.pseudo}` : ""}
+          </p>
+          <br />
+          <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-primary">
               Commencer une partie &rarr;
             </button>
           </Link>
-          <br></br>
-          <br></br>
+          <br />
+          <br />
 
           <div className={styles.grid}>
             <a className={styles.card}>
