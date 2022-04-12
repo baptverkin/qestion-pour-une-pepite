@@ -14,3 +14,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.cardProfile {
+  margin-left: 75px;
+  margin-right: 75px
+}
