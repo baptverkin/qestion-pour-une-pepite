@@ -1,7 +1,6 @@
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import Head from "next/head";
-import "bootstrap/dist/css/bootstrap.css";
 import { ReactNode } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 
