@@ -4,16 +4,22 @@ import router from "next/router";
 import React from "react";
 import { Layout } from "../components/layout";
 import { getDatabase } from "../src/database";
+import { getSession } from "@auth0/nextjs-auth0";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = getSession(req, res);
+  const email = session?.user.email;
   const mongodb = await getDatabase();
 
-  const response = await mongodb.db().collection("users").find().toArray();
+  const response = await mongodb
+    .db()
+    .collection("users")
+    .findOne({ email: email });
   const users = await JSON.parse(JSON.stringify(response));
 
   return {
     props: {
-      email: users[0].email,
+      email: email,
     },
   };
 };
