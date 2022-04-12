@@ -15,6 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     .db()
     .collection("users")
     .findOne({ email: email });
+
   const users = await JSON.parse(JSON.stringify(response));
 
   return {
@@ -45,7 +46,7 @@ const Form: React.FC<{ email: string }> = ({ email }) => {
       },
       body: JSON.stringify(temp),
     });
-    router.push("/");
+    router.push("/profile");
   };
   return (
     <Layout>
