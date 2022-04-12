@@ -1,8 +1,36 @@
+import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { Card, Nav, Button } from "react-bootstrap";
 import { Layout } from "../components/layout"
+import { getDatabase } from "../src/database";
 import styles from "../styles/Home.module.css";
+import jwt_decode from "jwt-decode";
+import { useUser } from "@auth0/nextjs-auth0";
 
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const accessTokken = context.req.cookies.appSession;
+  console.log("test accesstoken", accessTokken);
+
+  // const parseAccessToken = JSON.parse(accessTokken)
+  const decoded: any = jwt_decode(accessTokken);
+  console.log("decoded:", decoded)
+    const mongodb = await getDatabase();
+    const userInfo = await mongodb
+      .db()
+      .collection("users")
+      .findOne({ email: decoded.email })
+      .then((result) => result);
+
+  const users = await JSON.parse(JSON.stringify(userInfo));
+  console.log("test users", users);
+
+  return {
+    props: {
+      users: users,
+    },
+  };
+};
 
 
 const Profile: React.FC = () => {

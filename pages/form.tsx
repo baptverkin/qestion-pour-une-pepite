@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Layout } from "../components/layout";
 import { getDatabase } from "../src/database";
 
+
 export const getServerSideProps: GetServerSideProps = async () => {
   const mongodb = await getDatabase();
 
