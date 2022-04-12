@@ -6,6 +6,8 @@ import { Card, Nav, Button } from "react-bootstrap";
 import { Layout } from "../components/layout";
 import { getDatabase } from "../src/database";
 import styles from "../styles/Home.module.css";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
@@ -33,14 +35,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   };
 };
 
-// type Props = {
-//   _id : ObjectId,
-//   pseudo: string,
-//   victories: number,
-//   playedGames: number,
-//   email: string,
-// }
-
 const Profile: React.FC<{
   _id: ObjectId;
   pseudo: string;
@@ -51,39 +45,60 @@ const Profile: React.FC<{
   return (
     <>
       <Layout>
-        <h2>Bonjour {pseudo}</h2>
-        <ul>
-          <h4>{playedGames} parties</h4>
-          <h4>{victories} victoires</h4>
-          <h4>Classement général : 3e</h4>
-        </ul>
-        <br></br>
+        <div className="container">
+          <h2>Bonjour {pseudo}</h2>
+          <ul>
+            <h4>{playedGames} parties</h4>
+            <h4>{victories} victoires</h4>
+            <h4>Classement général : 3e</h4>
+          </ul>
+        </div>
+        <br />
 
         <h3 className={styles.title}>Choisis ton mode de jeu</h3>
         <br></br>
-
-        <Card className="cardProfile">
-          <Card.Header>
-            <Nav variant="tabs" defaultActiveKey="#first">
-              <Nav.Item>
-                <Nav.Link href="#first">Général</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link href="#link">Règles</Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </Card.Header>
-          <Card.Body>
-            <Card.Title>Jeu complet</Card.Title>
-            <Card.Text>
-              Défis tes amis ou l&apos;IA dans une partie en 3 manches et
-              devient le champion <br></br>9 points gagnants &rarr; 4 à la suite
-              &rarr; Face à face
-            </Card.Text>
-            <Link href="#" passHref={true}>
-              <Button variant="primary">Commencez à jouer &rarr;</Button>
-            </Link>
-          </Card.Body>
+        <Card
+          className="cardProfile"
+          style={{
+            textAlign: "center",
+            marginLeft: "100px",
+            marginRight: "100px",
+          }}
+        >
+          <Tabs defaultActiveKey="first">
+            <Tab eventKey="first" title="Général" className="container">
+              <h5>Jeu Complet : </h5>
+              <p>
+                Défie tes amis ou l&apos;IA dans une partie en 3 manches et
+                devient le champion <br></br>9 points gagnants &rarr; 4 à la
+                suite &rarr; Face à face
+              </p>
+            </Tab>
+            <Tab eventKey="second" title="Règles" className="container">
+              <h5>Règles du jeu : </h5>
+              <p>
+                Quatre candidats sont en lice et doivent, lors de 3 manches
+                successives, répondre à des questions de culture générale. Le
+                concurrent le moins performant est éliminé à la fin de chaque
+                manche et le gagnant est le candidat remportant la dernière
+                manche, ce qui lui donne le droit de rejouer à l&apos;émission
+                suivante.
+              </p>
+            </Tab>
+          </Tabs>
+          <Link href="#" passHref={true}>
+            <Button
+              variant="primary"
+              style={{
+                textAlign: "center",
+                marginLeft: "40%",
+                marginRight: "40%",
+                marginBottom: "1em",
+              }}
+            >
+              Commencez à jouer &rarr;
+            </Button>
+          </Link>
         </Card>
         <br></br>
 
@@ -97,6 +112,8 @@ const Profile: React.FC<{
               textAlign: "center",
               marginLeft: "100px",
               marginRight: "100px",
+              justifyContent: "center",
+              marginBottom: "1em",
             }}
           >
             <Card style={{ width: "18rem" }}>
