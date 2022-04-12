@@ -31,17 +31,17 @@ export const Layout: React.FC<{ children: any }> = ({
 
               <div className="text-end">
                 {user ? (
-                  <button type="button" className="btn btn-warning">
-                    <Link href="/api/auth/logout">
-                      <a>Logout</a>
+                  <Link href="/api/auth/logout" passHref={true}>
+                      <button type="button" className="btn btn-warning">
+                        <a>Logout</a>
+                      </button>
                     </Link>
-                  </button>
                 ) : (
-                  <button type="button" className="btn btn-warning">
-                    <Link href="/api/auth/login">
-                      <a>Login</a>
+                    <Link href="/api/auth/login" passHref={true}>
+                      <button type="button" className="btn btn-warning">
+                          <a>Login</a>
+                      </button>
                     </Link>
-                  </button>
                 )}
               </div>
             </div>
