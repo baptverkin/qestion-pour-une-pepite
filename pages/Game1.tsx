@@ -5,13 +5,7 @@ import { Layout } from "../components/layout";
 import styles from "../styles/Home.module.css";
 import { getDatabase } from "../src/database";
 import { getSession } from "@auth0/nextjs-auth0";
-import { CountdownCircleTimer } from
-	'react-countdown-circle-timer'
-import { useState } from "react";
-
-
-
-
+import { useEffect, useState } from "react";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
@@ -32,14 +26,25 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 };
 
 const Game1: React.FC<{ userDB: any }> = ({ userDB }) => {
-
+  const [timer, setTimer] = useState(30);
+  const [isDone, setIsDone] = useState(false)
   const [disable, setDisable] = useState(false);
+  useEffect(() => {
+  if (timer > 0 )
+  {setTimeout(() => timerReduce(), 1000)}
+  else {
 
+  }
+  }, [timer])
+
+  function timerReduce (){
+    setTimer(timer-1)
+  }
   return(
     <Layout>
     <div className={styles.title} style= {{marginTop: "20px"}}> 9 points gagnants</div>
     <div className={styles.description}> Question: quelle est la couleur de la mer noire?</div>
-
+    {timer}
 <div className="container">
   <div className="row">
   <div className="column"   > <button disabled={disable} onClick={() => setDisable(true)}>1</button></div>
