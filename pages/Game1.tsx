@@ -62,7 +62,7 @@ const Game1: React.FC<{
     setTimer(timer - 1);
   }
 
-  function compareResponse(response) {
+  function compareResponse(response: string) {
     if (response === goodAnswer) {
       setDisable(true);
       showResult(true)
