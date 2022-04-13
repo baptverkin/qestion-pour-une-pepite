@@ -19,6 +19,9 @@ a {
   margin-left: 75px;
   margin-right: 75px
 }
+.edit-pseudo:hover{
+  cursor: pointer;
+}
 
 .row {
   display: flex;

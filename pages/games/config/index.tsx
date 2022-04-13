@@ -32,7 +32,6 @@ const GameConfig: React.FC<{ _id: ObjectId; pseudo: string }> = ({
 }) => {
   const [diff, setDiff] = React.useState("");
   const handleButtons = (e: any) => {
-    console.log(e.target.value);
     setDiff(e.target.value);
   };
   return (

@@ -2,27 +2,25 @@ import { getSession } from "@auth0/nextjs-auth0";
 import { ObjectId } from "mongodb";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, Nav, Button } from "react-bootstrap";
 import { Layout } from "../components/layout";
 import { getDatabase } from "../src/database";
 import styles from "../styles/Home.module.css";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import router from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
   const email = session?.user.email;
-  console.log("test", session?.user.email);
 
   const mongodb = await getDatabase();
   const response = await mongodb
     .db()
     .collection("users")
     .findOne({ email: email });
-  console.log("response", response);
-
   const usersDb = JSON.parse(JSON.stringify(response));
-  console.log("usersDb", usersDb);
 
   return {
     props: {
@@ -45,8 +43,21 @@ const Profile: React.FC<{
   return (
     <>
       <Layout>
+        {/* {router.reload()} */}
         <div className="container">
-          <h2>Bonjour {pseudo}</h2>
+          <h2>
+            Bonjour {pseudo}&nbsp;&nbsp;&nbsp;
+            <Link href="/form" passHref>
+              <Image
+                className="edit-pseudo"
+                src="/images/pencil-icon.png"
+                alt="changer pseudo"
+                width="20"
+                height="20"
+              />
+            </Link>
+          </h2>
+
           <ul>
             <h4>{playedGames} parties</h4>
             <h4>{victories} victoires</h4>
@@ -60,23 +71,23 @@ const Profile: React.FC<{
         <Card
           className="cardProfile"
           style={{
-            textAlign: "center",
+            // textAlign: "center",
             marginLeft: "100px",
             marginRight: "100px",
           }}
         >
           <Tabs defaultActiveKey="first">
             <Tab eventKey="first" title="Général" className="container">
-              <h5>Jeu Complet : </h5>
-              <p>
+              <h5 style={{ marginTop: "1em" }}>Jeu Complet : </h5>
+              <p style={{ marginBottom: "1em" }}>
                 Défie tes amis ou l&apos;IA dans une partie en 3 manches et
                 devient le champion <br></br>9 points gagnants &rarr; 4 à la
                 suite &rarr; Face à face
               </p>
             </Tab>
             <Tab eventKey="second" title="Règles" className="container">
-              <h5>Règles du jeu : </h5>
-              <p>
+              <h5 style={{ marginTop: "1em" }}>Règles du jeu : </h5>
+              <p style={{ marginBottom: "1em" }}>
                 Quatre candidats sont en lice et doivent, lors de 3 manches
                 successives, répondre à des questions de culture générale. Le
                 concurrent le moins performant est éliminé à la fin de chaque

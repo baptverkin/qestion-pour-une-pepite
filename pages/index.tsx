@@ -20,11 +20,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return {
     props: {
       userDB: userDB,
+      session: JSON.parse(JSON.stringify(session)),
     },
   };
 };
 
-const Home: React.FC<{ userDB: any }> = ({ userDB }) => {
+const Home: React.FC<{ userDB: any; session: any }> = ({ userDB, session }) => {
   return (
     <Layout>
       <div className={styles.container}>
@@ -38,11 +39,26 @@ const Home: React.FC<{ userDB: any }> = ({ userDB }) => {
           </p>
           <br />
           <br />
-          <Link href="/profile" passHref>
-            <button type="button" className="btn btn-primary">
-              Commencer une partie &rarr;
-            </button>
-          </Link>
+          {session === null ? (
+            <Link href="/api/auth/login" passHref>
+              <button type="button" className="btn btn-primary">
+                Commencer une partie &rarr;
+              </button>
+            </Link>
+          ) : userDB === null || userDB === undefined ? (
+            <Link href="/form" passHref>
+              <button type="button" className="btn btn-primary">
+                Commencer une partie &rarr;
+              </button>
+            </Link>
+          ) : (
+            <Link href="/profile" passHref>
+              <button type="button" className="btn btn-primary">
+                Commencer une partie &rarr;
+              </button>
+            </Link>
+          )}
+
           <br />
           <br />
 
