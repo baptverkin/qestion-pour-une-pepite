@@ -42,17 +42,17 @@ const Game1: React.FC<{ userDB: any }> = ({ userDB }) => {
 
 <div className="container">
   <div className="row">
-  <div className="column"   > <button disabled={disable} onClick={() => setDisable(true)}>1</button></div>
-  <div className="column"><button disabled={disable} onClick={() => setDisable(true)}>2</button></div>
+  <div className="column"  style = {{position : "static", left: "40px"}}  > <button className="button button2"  disabled={disable} onClick={() => setDisable(true)}>1</button></div>
+  <div className="column"><button className="button button2" disabled={disable} onClick={() => setDisable(true)}>2</button></div>
 
   <div className="row">
-  <div className="column"   > <button disabled={disable} onClick={() => setDisable(true)}>3</button></div>
-  <div className="column"><button disabled={disable} onClick={() => setDisable(true)}>4</button></div>
+  <div className="column"   > <button className="button button2" disabled={disable} onClick={() => setDisable(true)}>3</button></div>
+  <div className="column"><button className="button button2" disabled={disable} onClick={() => setDisable(true)}>4</button></div>
 </div>
 
 <div className="row">
-  <div className="column"   > <button disabled={disable} onClick={() => setDisable(true)}>5</button></div>
-  <div className="column"><button disabled={disable} onClick={() => setDisable(true)}>6</button></div>
+  <div className="column"   > <button className="button button2"disabled={disable} onClick={() => setDisable(true)}>5</button></div>
+  <div className="column"><button className="button button2" disabled={disable} onClick={() => setDisable(true)}>6</button></div>
 </div>
 </div>
 </div>
