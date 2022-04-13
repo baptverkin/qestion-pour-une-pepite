@@ -19,3 +19,11 @@ a {
   margin-left: 75px;
   margin-right: 75px
 }
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
