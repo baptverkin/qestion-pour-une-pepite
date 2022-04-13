@@ -35,17 +35,7 @@ const Game1: React.FC<{ userDB: any }> = ({ userDB }) => {
     <Layout>
     <div className={styles.title} style= {{marginTop: "20px"}}> 9 points gagnants</div>
     <div className={styles.description}> Question: quelle est la couleur de la mer noire?</div>
-<div><CountdownCircleTimer className={styles.title}
-		isPlaying
-		duration={30}
-		colors={[
-		["#004777", 0.33],
-		["#F7B801", 0.33],
-		['#A30000', 0.33],
-		]}
-	>
-		{({ remainingTime }) => remainingTime}
-	</CountdownCircleTimer></div>
+
 <div className="container">
   <div className="row">
   <div className="column"   > <button >1</button></div>
