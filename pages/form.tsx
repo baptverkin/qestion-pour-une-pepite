@@ -45,8 +45,7 @@ const Form: React.FC<{ email: string }> = ({ email }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(temp),
-    });
-    router.push("/profile");
+    }).then(() => router.push("/profile"));
   };
   return (
     <Layout>
