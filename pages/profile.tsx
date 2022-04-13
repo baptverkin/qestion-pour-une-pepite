@@ -97,7 +97,7 @@ const Profile: React.FC<{
               </p>
             </Tab>
           </Tabs>
-          <Link href="#" passHref={true}>
+          <Link href="/games/config" passHref={true}>
             <Button
               variant="primary"
               style={{
