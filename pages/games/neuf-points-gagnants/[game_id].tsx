@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Layout } from "../components/layout";
-import styles from "../styles/Home.module.css";
-import { getDatabase } from "../src/database";
+import { Layout } from "../../../components/layout";
+import styles from "../../../styles/Home.module.css";
+import { getDatabase } from "../../../src/database";
 import { getSession } from "@auth0/nextjs-auth0";
 import { useEffect, useState } from "react";
 
@@ -45,7 +45,7 @@ const Game1: React.FC<{
   const [timer, setTimer] = useState(30);
   const [isDone, setIsDone] = useState(false);
   const [disable, setDisable] = useState(false);
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
   useEffect(() => {
     if (timer > 0) {
       setTimeout(() => timerReduce(), 1000);
@@ -65,20 +65,20 @@ const Game1: React.FC<{
   function compareResponse(response: string) {
     if (response === goodAnswer) {
       setDisable(true);
-      showResult(true)
+      showResult(true);
       return false;
     } else {
       setDisable(true);
-      showResult(false)
+      showResult(false);
       return true;
     }
   }
 
-  function showResult(isThatAGoodResponse: boolean){
-    if (isThatAGoodResponse){
-      setMessage("This is the good response")
+  function showResult(isThatAGoodResponse: boolean) {
+    if (isThatAGoodResponse) {
+      setMessage("This is the good response");
     } else {
-      setMessage("This is not the good response")
+      setMessage("This is not the good response");
     }
   }
 
@@ -94,46 +94,69 @@ const Game1: React.FC<{
         <div className="row">
           <div className="column">
             {" "}
-            <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[0])}>
+            <button
+              className="button button2"
+              disabled={disable}
+              onClick={() => compareResponse(answers[0])}
+            >
               {answers[0]}
             </button>
           </div>
           <div className="column">
-            <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[1])}>
+            <button
+              className="button button2"
+              disabled={disable}
+              onClick={() => compareResponse(answers[1])}
+            >
               {answers[1]}
             </button>
           </div>
-          </div>
-
-          <div className="row">
-            <div className="column">
-              {" "}
-              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[2])}>
-                {answers[2]}
-              </button>
-            </div>
-            <div className="column">
-              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[3])}>
-                {answers[3]}
-              </button>
-            </div>
-          </div>
-          <div className="row">
-            <div className="column">
-              {" "}
-              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[4])}>
-                {answers[4]}
-              </button>
-            </div>
-            <div className="column">
-              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[5])}>
-                {answers[5]}
-              </button>
-            </div>
-          </div>
-          {message}
         </div>
 
+        <div className="row">
+          <div className="column">
+            {" "}
+            <button
+              className="button button2"
+              disabled={disable}
+              onClick={() => compareResponse(answers[2])}
+            >
+              {answers[2]}
+            </button>
+          </div>
+          <div className="column">
+            <button
+              className="button button2"
+              disabled={disable}
+              onClick={() => compareResponse(answers[3])}
+            >
+              {answers[3]}
+            </button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="column">
+            {" "}
+            <button
+              className="button button2"
+              disabled={disable}
+              onClick={() => compareResponse(answers[4])}
+            >
+              {answers[4]}
+            </button>
+          </div>
+          <div className="column">
+            <button
+              className="button button2"
+              disabled={disable}
+              onClick={() => compareResponse(answers[5])}
+            >
+              {answers[5]}
+            </button>
+          </div>
+        </div>
+        {message}
+      </div>
     </Layout>
   );
 };

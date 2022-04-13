@@ -7,6 +7,7 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
+  const _id = req.body._id;
   const email = req.body.email;
   const pseudo = req.body.pseudo;
   let difficulty = req.body.difficulty;
@@ -17,10 +18,30 @@ const handler = async (
 
     const createGame = await mongodb.db().collection("current-games").insertOne({
       players :
-      {player1: pseudo,
-      player2: "",
-      player3: "",
-      player4: ""},
+      {player1:
+        { _id : _id,
+          pseudo : pseudo,
+          score9PtsGagnant : 0,
+          score4ALaSuite: 0,
+          scoreFaceAFace: 0} ,
+      player2:
+      { _id : "",
+        pseudo : "IA Lucas",
+        score9PtsGagnant : 0,
+        score4ALaSuite: 0,
+        scoreFaceAFace: 0} ,
+      player3:
+        { _id : "",
+        pseudo : "IA Bot Martin",
+        score9PtsGagnant : 0,
+        score4ALaSuite: 0,
+        scoreFaceAFace: 0} ,
+      player4:
+        { _id : "",
+        pseudo : "IA Glados",
+        score9PtsGagnant : 0,
+        score4ALaSuite: 0,
+        scoreFaceAFace: 0}},
       email: email,
       difficulty: difficulty,
       finished: false,
@@ -31,7 +52,7 @@ const handler = async (
 
     // .then (()=> router.push(`/games/${findId}`));
   // router.push(`/games/${findId}`);
-  res.redirect(307, `/games/${findId}`).end()
+  res.redirect(307, `/games/complete-game/${findId}`).end()
 }
 
 export default handler;

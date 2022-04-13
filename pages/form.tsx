@@ -35,6 +35,7 @@ const Form: React.FC<{ email: string }> = ({ email }) => {
   };
   const handleSubmit = (e: { preventDefault: () => void; target: any }) => {
     e.preventDefault();
+
     const temp = {
       pseudo: input,
       email: email,
