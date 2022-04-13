@@ -94,25 +94,26 @@ const Game1: React.FC<{
         <div className="row">
           <div className="column">
             {" "}
-            <button disabled={disable} onClick={() => compareResponse(answers[0])}>
+            <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[0])}>
               {answers[0]}
             </button>
           </div>
           <div className="column">
-            <button disabled={disable} onClick={() => compareResponse(answers[1])}>
+            <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[1])}>
               {answers[1]}
             </button>
+          </div>
           </div>
 
           <div className="row">
             <div className="column">
               {" "}
-              <button disabled={disable} onClick={() => compareResponse(answers[2])}>
+              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[2])}>
                 {answers[2]}
               </button>
             </div>
             <div className="column">
-              <button disabled={disable} onClick={() => compareResponse(answers[3])}>
+              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[3])}>
                 {answers[3]}
               </button>
             </div>
@@ -120,19 +121,19 @@ const Game1: React.FC<{
           <div className="row">
             <div className="column">
               {" "}
-              <button disabled={disable} onClick={() => compareResponse(answers[4])}>
+              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[4])}>
                 {answers[4]}
               </button>
             </div>
             <div className="column">
-              <button disabled={disable} onClick={() => compareResponse(answers[5])}>
+              <button className="button button2" disabled={disable} onClick={() => compareResponse(answers[5])}>
                 {answers[5]}
               </button>
             </div>
           </div>
           {message}
         </div>
-      </div>
+
     </Layout>
   );
 };
