@@ -9,7 +9,6 @@ import { getDatabase } from "../src/database";
 import styles from "../styles/Home.module.css";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import router from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
