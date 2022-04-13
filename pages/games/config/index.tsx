@@ -1,6 +1,8 @@
 import { getSession } from "@auth0/nextjs-auth0";
 import { ObjectId } from "mongodb";
 import { GetServerSideProps } from "next";
+import Link from "next/link";
+import router from "next/router";
 import React from "react";
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { Layout } from "../../../components/layout";
@@ -21,19 +23,43 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return {
     props: {
       _id: usersDb._id,
+      email: usersDb.email,
       pseudo: usersDb.pseudo,
     },
   };
 };
 
-const GameConfig: React.FC<{ _id: ObjectId; pseudo: string }> = ({
-  _id,
-  pseudo,
-}) => {
-  const [diff, setDiff] = React.useState("");
+const GameConfig: React.FC<{
+  _id: ObjectId;
+  pseudo: string;
+  email: string;
+}> = ({ _id, pseudo, email }) => {
+  const [difficulty, setDifficulty] = React.useState("");
+
   const handleButtons = (e: any) => {
-    setDiff(e.target.value);
+    setDifficulty(e.target.value);
   };
+
+  const handleSubmit = async (e: {
+    preventDefault: () => void;
+    target: any;
+  }) => {
+    e.preventDefault();
+    const temp = {
+      pseudo: pseudo,
+      email: email,
+      difficulty: difficulty,
+    };
+
+    await fetch("/api/games/generateGame", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(temp),
+    }).then((result) => router.push(result.url));
+  };
+
   return (
     <Layout>
       <div className="container">
@@ -47,7 +73,7 @@ const GameConfig: React.FC<{ _id: ObjectId; pseudo: string }> = ({
         <label>Joueur 4 : </label> IA Glados
         <br />
         <br />
-        <h4>Choix de la difficulté : {diff} </h4>
+        <h4>Choix de la difficulté : {difficulty} </h4>
         <ButtonGroup aria-label="Basic example">
           <Button variant="secondary" value="facile" onClick={handleButtons}>
             Facile
@@ -65,7 +91,7 @@ const GameConfig: React.FC<{ _id: ObjectId; pseudo: string }> = ({
         <br />
         <br />
         <br />
-        <Button>Lancer la partie &rarr;</Button>
+        <Button onClick={handleSubmit}>Lancer la partie &rarr;</Button>
       </div>
     </Layout>
   );
