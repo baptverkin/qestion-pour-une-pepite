@@ -7,12 +7,23 @@ export default async function handler(
   const email = req.body.email;
   const pseudo = req.body.pseudo;
   const mongodb = await getDatabase();
-  const user = await mongodb
+  const isUser = await mongodb
     .db()
     .collection("users")
-    .updateOne({ email: email }, { $set: { pseudo: pseudo } });
-  if (user.acknowledged) {
-    console.log("=========================  OK");
+    .findOne({ email: email });
+  if (isUser) {
+    const user = await mongodb
+      .db()
+      .collection("users")
+      .updateOne({ email: email }, { $set: { pseudo: pseudo } });
+    console.log("l'user existe");
+  } else {
+    const user = await mongodb.db().collection("users").insertOne({
+      pseudo: pseudo,
+      victories: 0,
+      playedGames: 0,
+      email: email,
+    });
+    console.log("l'user n'existe pas");
   }
-  res.redirect("/", 302);
 }
