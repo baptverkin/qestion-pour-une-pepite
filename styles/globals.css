@@ -21,6 +21,7 @@ a {
 }
 .edit-pseudo:hover{
   cursor: pointer;
+}
 
 .row {
   display: flex;
