@@ -7,6 +7,7 @@ import { getDatabase } from "../src/database";
 import { getSession } from "@auth0/nextjs-auth0";
 import { CountdownCircleTimer } from
 	'react-countdown-circle-timer'
+import { useState } from "react";
 
 
 
@@ -31,6 +32,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 };
 
 const Game1: React.FC<{ userDB: any }> = ({ userDB }) => {
+
+  const [disable, setDisable] = useState(false);
+
   return(
     <Layout>
     <div className={styles.title} style= {{marginTop: "20px"}}> 9 points gagnants</div>
@@ -38,17 +42,17 @@ const Game1: React.FC<{ userDB: any }> = ({ userDB }) => {
 
 <div className="container">
   <div className="row">
-  <div className="column"   > <button >1</button></div>
-  <div className="column"><button>2</button></div>
+  <div className="column"   > <button disabled={disable} onClick={() => setDisable(true)}>1</button></div>
+  <div className="column"><button disabled={disable} onClick={() => setDisable(true)}>2</button></div>
 
   <div className="row">
-  <div className="column"   > <button >3</button></div>
-  <div className="column"><button>4</button></div>
+  <div className="column"   > <button disabled={disable} onClick={() => setDisable(true)}>3</button></div>
+  <div className="column"><button disabled={disable} onClick={() => setDisable(true)}>4</button></div>
 </div>
 
 <div className="row">
-  <div className="column"   > <button >5</button></div>
-  <div className="column"><button>6</button></div>
+  <div className="column"   > <button disabled={disable} onClick={() => setDisable(true)}>5</button></div>
+  <div className="column"><button disabled={disable} onClick={() => setDisable(true)}>6</button></div>
 </div>
 </div>
 </div>
