@@ -46,6 +46,7 @@ const GameConfig: React.FC<{
   }) => {
     e.preventDefault();
     const temp = {
+      _id: _id,
       pseudo: pseudo,
       email: email,
       difficulty: difficulty,
