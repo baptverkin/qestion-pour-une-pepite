@@ -5,11 +5,13 @@ import { getDatabase } from "../../../src/database";
 import { getSession } from "@auth0/nextjs-auth0";
 import { useEffect, useState } from "react";
 import router from "next/router";
+import { ObjectId } from "mongodb";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
   const email = session?.user.email;
   const mongodb = await getDatabase();
+
   const response = await mongodb
     .db()
     .collection("users")
@@ -21,6 +23,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     .collection("9-points-gagnants")
     .find()
     .toArray();
+
   const questionUsed =
     questionsList[Math.floor(Math.random() * questionsList.length)];
   const badresponses = questionUsed.responses;
@@ -34,12 +37,25 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     .toArray();
 
   const players = currentGame[0].players;
+  const findGameId = currentGame[0]._id;
+  const findGameIdplayer2 = currentGame[0].players.player2._id;
+  const findGameIdplayer3 = currentGame[0].players.player3._id;
+  const findGameIdplayer4 = currentGame[0].players.player4._id;
 
-  console.log("poitns:", players);
+  const gameId = JSON.parse(JSON.stringify(findGameId));
+  const gameIdPlayer2 = JSON.parse(JSON.stringify(findGameIdplayer2));
+  const gameIdPlayer3 = JSON.parse(JSON.stringify(findGameIdplayer3));
+  const gameIdPlayer4 = JSON.parse(JSON.stringify(findGameIdplayer4));
+
+  // const _idGame = currentGame._id;
 
   return {
     props: {
       userDB: userDB,
+      gameId: gameId,
+      gameIdPlayer2: gameIdPlayer2,
+      gameIdPlayer3: gameIdPlayer3,
+      gameIdPlayer4: gameIdPlayer4,
       question: questionUsed.question,
       points: questionUsed.points,
       answers: shuffledResponses,
@@ -51,25 +67,38 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
 const Game1: React.FC<{
   userDB: any;
+  gameId: ObjectId;
+  gameIdPlayer2: ObjectId;
+  gameIdPlayer3: ObjectId;
+  gameIdPlayer4: ObjectId;
   question: string;
   answers: string[];
   goodAnswer: string;
   players: any;
   points: number;
-}> = ({ userDB, question, answers, goodAnswer, players, points }) => {
+}> = ({
+  userDB,
+  gameId,
+  gameIdPlayer2,
+  gameIdPlayer3,
+  gameIdPlayer4,
+  question,
+  answers,
+  goodAnswer,
+  players,
+  points,
+}) => {
   const [timer, setTimer] = useState(30);
   const [isDone, setIsDone] = useState(false);
   const [disable, setDisable] = useState(false);
   const [message, setMessage] = useState("");
-
-  console.log("userDB", userDB._id);
+  const [response, setResponse] = useState("");
 
   useEffect(() => {
     if (timer > 0) {
       setTimeout(() => timerReduce(), 1000);
     } else {
       setIsDone(true);
-      console.log(isDone);
     }
     if (isDone) {
       setDisable(true);
@@ -80,59 +109,47 @@ const Game1: React.FC<{
     setTimer(timer - 1);
   }
 
-  function compareResponse(
-    response: string,
-    e: { preventDefault: () => void; target: any }
-  ) {
-    setDisable(true);
+  // e: { preventDefault: () => void; target: any }
 
-    e.preventDefault();
-    console.log("test prevent default", e.preventDefault());
-
+  function handleResponse(clickedResponse: string) {
     const temp = {
+      gameId: gameId,
       _id: userDB._id,
+      gameIdPlayer2: gameIdPlayer2,
+      gameIdPlayer3: gameIdPlayer3,
+      gameIdPlayer4: gameIdPlayer4,
       questionPoints: points,
+      pseudo1: players.player1.pseudo,
+      pseudo2: players.player2.pseudo,
+      pseudo3: players.player3.pseudo,
+      pseudo4: players.player4.pseudo,
     };
+    console.log("test avant if", response);
 
-    if (response === goodAnswer) {
+    if (clickedResponse === goodAnswer) {
       showResult(true);
-      fetch("api/handle-answer/good-answer", {
-        method: "GET",
+      fetch("/api/handle-answer/good-answer", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(temp),
       }).then((result) => router.push(result.url));
-
-      return false;
+      console.log("BodyTrue", JSON.stringify(temp));
     } else {
       showResult(false);
-      fetch("api/handle-answer/wrong-answer", {
-        method: "GET",
+      console.log("test avant call api", response);
+
+      fetch("/api/handle-answer/wrong-answer", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(temp),
       }).then((result) => router.push(result.url));
-      return true;
+      console.log("BodyWrong", JSON.stringify(temp));
     }
   }
-
-  // const handleSubmit = (e: { preventDefault: () => void; target: any }) => {
-  //   e.preventDefault();
-
-  //   const temp = {
-  //     pseudo: input,
-  //     email: email,
-  //   };
-  //   fetch("/api/update_user", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(temp),
-  //   }).then(() => router.push("/profile"));
-  // };
 
   function showResult(isThatAGoodResponse: boolean) {
     if (isThatAGoodResponse) {
@@ -141,8 +158,6 @@ const Game1: React.FC<{
       setMessage("This is not the good response");
     }
   }
-
-  console.log("players ===", players);
 
   return (
     <Layout>
@@ -159,7 +174,11 @@ const Game1: React.FC<{
             <button
               className="button button2"
               disabled={disable}
-              onClick={() => compareResponse(answers[0])}
+              onClick={() => {
+                setDisable(true);
+                setResponse(answers[0]);
+                handleResponse(answers[0]);
+              }}
             >
               {answers[0]}
             </button>
@@ -168,7 +187,11 @@ const Game1: React.FC<{
             <button
               className="button button2"
               disabled={disable}
-              onClick={() => compareResponse(answers[1])}
+              onClick={() => {
+                setDisable(true);
+                setResponse(answers[1]);
+                handleResponse;
+              }}
             >
               {answers[1]}
             </button>
@@ -181,7 +204,11 @@ const Game1: React.FC<{
             <button
               className="button button2"
               disabled={disable}
-              onClick={() => compareResponse(answers[2])}
+              onClick={() => {
+                setDisable(true);
+                setResponse(answers[2]);
+                handleResponse;
+              }}
             >
               {answers[2]}
             </button>
@@ -190,7 +217,11 @@ const Game1: React.FC<{
             <button
               className="button button2"
               disabled={disable}
-              onClick={() => compareResponse(answers[3])}
+              onClick={() => {
+                setDisable(true);
+                setResponse(answers[3]);
+                handleResponse;
+              }}
             >
               {answers[3]}
             </button>
@@ -202,7 +233,11 @@ const Game1: React.FC<{
             <button
               className="button button2"
               disabled={disable}
-              onClick={() => compareResponse(answers[4])}
+              onClick={() => {
+                setDisable(true);
+                setResponse(answers[4]);
+                handleResponse;
+              }}
             >
               {answers[4]}
             </button>
@@ -211,7 +246,11 @@ const Game1: React.FC<{
             <button
               className="button button2"
               disabled={disable}
-              onClick={() => compareResponse(answers[5])}
+              onClick={() => {
+                setDisable(true);
+                setResponse(answers[5]);
+                handleResponse;
+              }}
             >
               {answers[5]}
             </button>
