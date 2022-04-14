@@ -9,13 +9,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _idPlayer2 = req.body.gameIdPlayer2;
   const _idPlayer3 = req.body.gameIdPlayer3;
   const _idPlayer4 = req.body.gameIdPlayer4;
-
-  console.log("id", _id);
-  console.log("gameId", gameId);
-  console.log("points", points);
-  console.log("pseudo2", _idPlayer2);
-  console.log("pseudo3", _idPlayer3);
-  console.log("pseudo4", _idPlayer4);
+  const questionId = req.body.questionId;
+  const clickedResponse = req.body.clickedResponse;
+  const timer = req.body.timer;
 
   const mongodb = await getDatabase();
 
@@ -23,22 +19,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .db()
     .collection("current-games")
     .findOne({ _id: new ObjectId(gameId) });
-  console.log("game", game);
+
 
   if (game?.players.player1._id === _id) {
-    console.log("correct ID");
+    const numeroManche = game?.neufPointsGagnants.length;
     const updateGame = await mongodb
       .db()
       .collection("current-games")
       .updateOne(
-        { _id: new ObjectId(gameId) },
-        { $set: {"players.player1.answeredQuestion": true } }
+        { _id : new ObjectId(gameId) },
+        {
+          $set: {
+            [`neufPointsGagnants.${numeroManche-1}.player1`]: {
+                clickedResponse: clickedResponse,
+                correctAnswer: false,
+                score: 0,
+                time: timer,
+              },
+            },
+          },
       );
-      console.log("updatdateGame", updateGame)
   } else {
     console.log("wrong id");
   }
 
-  res.redirect(307, `/`).end();
+  res.redirect(307, `/games/complete-game/${gameId}`).end();
 };
 export default handler;
