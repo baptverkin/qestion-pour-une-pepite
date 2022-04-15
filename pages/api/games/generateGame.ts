@@ -12,6 +12,13 @@ const handler = async (
   const _id = req.body._id;
   const email = req.body.email;
   const pseudo = req.body.pseudo;
+  const _idPlayer2 = req.body._idPlayer2;
+  const pseudoPlayer2 = req.body.pseudoPlayer2;
+  const _idPlayer3 = req.body._idPlayer3;
+  const pseudoPlayer3 = req.body.pseudoPlayer3;
+  const _idPlayer4 =  req.body._idPlayer4;
+  const pseudoPlayer4= req.body.pseudoPlayer4;
+
   let difficulty = req.body.difficulty;
   if (difficulty === "") {
     difficulty = "facile";
@@ -25,43 +32,38 @@ const handler = async (
           pseudo : pseudo,
           score9PtsGagnant : 0,
           score4ALaSuite: 0,
-          scoreFaceAFace: 0,
-          answeredQuestion : false } ,
+          scoreFaceAFace: 0} ,
       player2:
-      { _id : uuidv4(),
-        pseudo : "IA Lucas",
+      { _id : _idPlayer2,
+        pseudo : pseudoPlayer2,
         score9PtsGagnant : 0,
         score4ALaSuite: 0,
-        scoreFaceAFace: 0,
-        answeredQuestion : false,} ,
+        scoreFaceAFace: 0} ,
       player3:
-        { _id : uuidv4(),
-        pseudo : "IA Bot Martin",
+        { _id : _idPlayer3,
+        pseudo : pseudoPlayer3,
         score9PtsGagnant : 0,
         score4ALaSuite: 0,
-        scoreFaceAFace: 0,
-        answeredQuestion : false} ,
+        scoreFaceAFace: 0} ,
       player4:
-        { _id : uuidv4(),
-        pseudo : "IA Glados",
+        { _id : _idPlayer4,
+        pseudo : pseudoPlayer4,
         score9PtsGagnant : 0,
         score4ALaSuite: 0,
-        scoreFaceAFace: 0,
-        answeredQuestion : false}},
+        scoreFaceAFace: 0}
+      },
       email: email,
       difficulty: difficulty,
       finished: false,
-      neufPointsGagnants : [],
+      neufPointsGagnants : [{manche : 1, questionId : "", player1: {}, player2: {}, player3: {}, player4: {}}],
       quatreALaSuite: [],
       faceAFace: [],
     });
 
-    const findId = await mongodb.db().collection("current-games").findOne({email : email, finished : false }).then((result)=> result?._id.toString());
-    console.log("finId", findId)
+    const gameId = await mongodb.db().collection("current-games").findOne({email : email, finished : false }).then((result)=> result?._id.toString());
+    console.log("finId", gameId)
 
-    // .then (()=> router.push(`/games/${findId}`));
-  // router.push(`/games/${findId}`);
-  res.redirect(307, `/games/complete-game/${findId}`).end()
+  res.redirect(307, `/games/complete-game/${gameId}`).end()
 }
 
 export default handler;

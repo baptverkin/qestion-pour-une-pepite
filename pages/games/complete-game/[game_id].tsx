@@ -26,6 +26,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   const questionUsed =
     questionsList[Math.floor(Math.random() * questionsList.length)];
+  const questionIdBeforeParse = questionUsed._id;
   const badresponses = questionUsed.responses;
   const allTheReponses = [...badresponses, questionUsed.goodAnswer];
   const shuffledResponses = allTheReponses.sort(() => Math.random() - 0.5);
@@ -46,8 +47,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const gameIdPlayer2 = JSON.parse(JSON.stringify(findGameIdplayer2));
   const gameIdPlayer3 = JSON.parse(JSON.stringify(findGameIdplayer3));
   const gameIdPlayer4 = JSON.parse(JSON.stringify(findGameIdplayer4));
-
-  // const _idGame = currentGame._id;
+  const questionId = JSON.parse(JSON.stringify(questionIdBeforeParse));
 
   return {
     props: {
@@ -61,6 +61,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       answers: shuffledResponses,
       goodAnswer: questionUsed.goodAnswer,
       players: players,
+      questionId: questionId,
     },
   };
 };
@@ -76,6 +77,7 @@ const Game1: React.FC<{
   goodAnswer: string;
   players: any;
   points: number;
+  questionId: ObjectId;
 }> = ({
   userDB,
   gameId,
@@ -87,10 +89,13 @@ const Game1: React.FC<{
   goodAnswer,
   players,
   points,
+  questionId,
 }) => {
   const [timer, setTimer] = useState(30);
   const [isDone, setIsDone] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [iATimer, setIaTimer] = useState(2);
+  const [isDoneIa, setIsDoneIa] = useState(false);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
 
@@ -105,11 +110,65 @@ const Game1: React.FC<{
     }
   }, [timer, isDone]);
 
+  useEffect(() => {
+    if (iATimer > 0) {
+      setTimeout(() => timerReduceIa(), 1000);
+    } else {
+      setIsDoneIa(true);
+    }
+    if (isDoneIa) {
+      const answerIa2 = answers[Math.floor(Math.random() * answers.length)];
+
+      const temp = {
+        gameId: gameId,
+        _id: userDB._id,
+        gameIdPlayer2: gameIdPlayer2,
+        gameIdPlayer3: gameIdPlayer3,
+        gameIdPlayer4: gameIdPlayer4,
+        questionPoints: points,
+        pseudo1: players.player1.pseudo,
+        pseudo2: players.player2.pseudo,
+        pseudo3: players.player3.pseudo,
+        pseudo4: players.player4.pseudo,
+        questionId: questionId,
+        answerIa2: answerIa2,
+        goodAnswer: goodAnswer,
+        timer: timer,
+      };
+
+      if (answerIa2 === goodAnswer) {
+        fetch("/api/handle-answer-player2/good-answer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(temp),
+        }).then((result) => router.push(result.url));
+        setDisable(true);
+      } else {
+        showResult(false);
+        fetch("/api/handle-answer-player2/wrong-answer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(temp),
+        }).then((result) => router.push(result.url));
+      }
+
+      //créer les 3 IAs et leurs actions dans la DB
+      //envoyer la question suivante
+      // créer une nouvelle manche DB
+      //reset tous les useStates
+    }
+  }, [iATimer, isDoneIa]);
+
   function timerReduce() {
     setTimer(timer - 1);
   }
-
-  // e: { preventDefault: () => void; target: any }
+  function timerReduceIa() {
+    setIaTimer(iATimer - 1);
+  }
 
   function handleResponse(clickedResponse: string) {
     const temp = {
@@ -123,39 +182,40 @@ const Game1: React.FC<{
       pseudo2: players.player2.pseudo,
       pseudo3: players.player3.pseudo,
       pseudo4: players.player4.pseudo,
+      questionId: questionId,
+      clickedResponse: clickedResponse,
+      goodAnswer: goodAnswer,
+      timer: timer,
     };
-    console.log("test avant if", response);
 
     if (clickedResponse === goodAnswer) {
       showResult(true);
-      fetch("/api/handle-answer/good-answer", {
+      fetch("/api/handle-answer-player1/good-answer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(temp),
       }).then((result) => router.push(result.url));
-      console.log("BodyTrue", JSON.stringify(temp));
+
+      setDisable(true);
     } else {
       showResult(false);
-      console.log("test avant call api", response);
-
-      fetch("/api/handle-answer/wrong-answer", {
+      fetch("/api/handle-answer-player1/wrong-answer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(temp),
       }).then((result) => router.push(result.url));
-      console.log("BodyWrong", JSON.stringify(temp));
     }
   }
 
   function showResult(isThatAGoodResponse: boolean) {
     if (isThatAGoodResponse) {
-      setMessage("This is the good response");
+      setMessage("Good answer ! 😁 ");
     } else {
-      setMessage("This is not the good response");
+      setMessage("Wrong answer ! 😩");
     }
   }
 
@@ -166,7 +226,8 @@ const Game1: React.FC<{
         9 points gagnants
       </div>
       <div className={styles.description}> {question}</div>
-      {timer}
+      <div>{timer}</div>
+      <div>{message}</div>
       <div className="container">
         <div className="row">
           <div className="column">
@@ -190,7 +251,7 @@ const Game1: React.FC<{
               onClick={() => {
                 setDisable(true);
                 setResponse(answers[1]);
-                handleResponse;
+                handleResponse(answers[1]);
               }}
             >
               {answers[1]}
@@ -207,7 +268,7 @@ const Game1: React.FC<{
               onClick={() => {
                 setDisable(true);
                 setResponse(answers[2]);
-                handleResponse;
+                handleResponse(answers[2]);
               }}
             >
               {answers[2]}
@@ -220,7 +281,7 @@ const Game1: React.FC<{
               onClick={() => {
                 setDisable(true);
                 setResponse(answers[3]);
-                handleResponse;
+                handleResponse(answers[3]);
               }}
             >
               {answers[3]}
@@ -236,7 +297,7 @@ const Game1: React.FC<{
               onClick={() => {
                 setDisable(true);
                 setResponse(answers[4]);
-                handleResponse;
+                handleResponse(answers[4]);
               }}
             >
               {answers[4]}
@@ -249,14 +310,13 @@ const Game1: React.FC<{
               onClick={() => {
                 setDisable(true);
                 setResponse(answers[5]);
-                handleResponse;
+                handleResponse(answers[5]);
               }}
             >
               {answers[5]}
             </button>
           </div>
         </div>
-        {message}
         <div>
           {players.player1.pseudo}: {players.player1.score9PtsGagnant}
           &nbsp;&nbsp;&nbsp;

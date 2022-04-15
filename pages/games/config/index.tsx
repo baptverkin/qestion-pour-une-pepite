@@ -11,20 +11,47 @@ import { getDatabase } from "../../../src/database";
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
   const email = session?.user.email;
+  const emailPlayer2 = "iabotmartin@fewlines.com";
+  const emailPlayer3 = "iajehane@fewlines.com";
+  const emailPlayer4 = "iafenn@fewlines.com";
 
   const mongodb = await getDatabase();
-  const response = await mongodb
+
+  const player1 = await mongodb
     .db()
     .collection("users")
     .findOne({ email: email });
+  const usersDb = JSON.parse(JSON.stringify(player1));
 
-  const usersDb = JSON.parse(JSON.stringify(response));
+  const userPlayer2 = await mongodb
+    .db()
+    .collection("users")
+    .findOne({ email: emailPlayer2 });
+  const player2 = JSON.parse(JSON.stringify(userPlayer2));
+
+  const userPlayer3 = await mongodb
+    .db()
+    .collection("users")
+    .findOne({ email: emailPlayer3 });
+  const player3 = JSON.parse(JSON.stringify(userPlayer3));
+
+  const userPlayer4 = await mongodb
+    .db()
+    .collection("users")
+    .findOne({ email: emailPlayer4 });
+  const player4 = JSON.parse(JSON.stringify(userPlayer4));
 
   return {
     props: {
       _id: usersDb._id,
       email: usersDb.email,
       pseudo: usersDb.pseudo,
+      _idPlayer2: player2._id,
+      pseudoPlayer2: player2.pseudo,
+      _idPlayer3: player3._id,
+      pseudoPlayer3: player3.pseudo,
+      _idPlayer4: player4._id,
+      pseudoPlayer4: player4.pseudo,
     },
   };
 };
@@ -33,7 +60,23 @@ const GameConfig: React.FC<{
   _id: ObjectId;
   pseudo: string;
   email: string;
-}> = ({ _id, pseudo, email }) => {
+  _idPlayer2: ObjectId;
+  pseudoPlayer2: string;
+  _idPlayer3: ObjectId;
+  pseudoPlayer3: string;
+  _idPlayer4: ObjectId;
+  pseudoPlayer4: string;
+}> = ({
+  _id,
+  pseudo,
+  email,
+  _idPlayer2,
+  _idPlayer3,
+  _idPlayer4,
+  pseudoPlayer2,
+  pseudoPlayer3,
+  pseudoPlayer4,
+}) => {
   const [difficulty, setDifficulty] = React.useState("");
 
   const handleButtons = (e: any) => {
@@ -50,6 +93,12 @@ const GameConfig: React.FC<{
       pseudo: pseudo,
       email: email,
       difficulty: difficulty,
+      _idPlayer2: _idPlayer2,
+      pseudoPlayer2: pseudoPlayer2,
+      _idPlayer3: _idPlayer3,
+      pseudoPlayer3: pseudoPlayer3,
+      _idPlayer4: _idPlayer4,
+      pseudoPlayer4: pseudoPlayer4,
     };
 
     await fetch("/api/games/generateGame", {
@@ -67,11 +116,11 @@ const GameConfig: React.FC<{
         <h3>Configurer la partie :</h3>
         <label>Joueur 1 : </label> {pseudo}
         <br />
-        <label>Joueur 2 : </label> IA Lucas
+        <label>Joueur 2 : </label> {pseudoPlayer2}
         <br />
-        <label>Joueur 3 : </label> IA Bot Martin
+        <label>Joueur 3 : </label> {pseudoPlayer3}
         <br />
-        <label>Joueur 4 : </label> IA Glados
+        <label>Joueur 4 : </label> {pseudoPlayer4}
         <br />
         <br />
         <h4>Choix de la difficulté : {difficulty} </h4>
