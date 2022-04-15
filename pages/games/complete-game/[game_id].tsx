@@ -163,6 +163,30 @@ const Game1: React.FC<{
     setIsDoneIa4(false);
     setMessage("");
     setResponse("");
+
+    const temp = {
+      gameId: gameId,
+      _id: userDB._id,
+      gameIdPlayer2: gameIdPlayer2,
+      gameIdPlayer3: gameIdPlayer3,
+      gameIdPlayer4: gameIdPlayer4,
+      questionPoints: points,
+      pseudo1: players.player1.pseudo,
+      pseudo2: players.player2.pseudo,
+      pseudo3: players.player3.pseudo,
+      pseudo4: players.player4.pseudo,
+      questionId: questionId,
+      goodAnswer: goodAnswer,
+      timer: timer,
+    };
+
+    fetch("/api/games/generateManche", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(temp),
+    }).then((result) => router.push(result.url));
   }
 
   useEffect(() => {
@@ -199,10 +223,9 @@ const Game1: React.FC<{
               "Content-Type": "application/json",
             },
             body: JSON.stringify(temp),
-          }).then((result) => router.push(result.url));
+          });
           setDisableTrue(true);
-          endOfManche();
-          endOfManche();
+          // endOfManche();
         } else {
           showResult(false, temp.pseudo2, temp.goodAnswer);
           fetch("/api/handle-answer-player2/wrong-answer", {
@@ -287,9 +310,9 @@ const Game1: React.FC<{
               "Content-Type": "application/json",
             },
             body: JSON.stringify(temp),
-          }).then((result) => router.push(result.url));
+          });
           setDisableTrue(true);
-          endOfManche();
+          // endOfManche();
         } else {
           showResult(false, temp.pseudo3, temp.goodAnswer);
           fetch("/api/handle-answer-player3/wrong-answer", {
@@ -367,9 +390,9 @@ const Game1: React.FC<{
               "Content-Type": "application/json",
             },
             body: JSON.stringify(temp),
-          }).then((result) => router.push(result.url));
+          });
           setDisableTrue(true);
-          endOfManche();
+          // endOfManche();
         } else {
           showResult(false, temp.pseudo4, temp.goodAnswer);
           fetch("/api/handle-answer-player4/wrong-answer", {
@@ -437,9 +460,9 @@ const Game1: React.FC<{
           "Content-Type": "application/json",
         },
         body: JSON.stringify(temp),
-      }).then((result) => router.push(result.url));
+      });
       setDisableTrue(true);
-      endOfManche();
+      // endOfManche();
     } else {
       showResult(false, temp.pseudo1, temp.goodAnswer);
       setDisableWrong(true);
@@ -451,6 +474,10 @@ const Game1: React.FC<{
         body: JSON.stringify(temp),
       });
     }
+  }
+
+  if (disableTrue === true || isDone === true) {
+    endOfManche();
   }
 
   function showResult(
