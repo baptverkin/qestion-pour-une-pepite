@@ -34,19 +34,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const currentGame = await mongodb
     .db()
     .collection("current-games")
-    .find()
-    .toArray();
+    .findOne({ email: email, finished: false });
 
-  const players = currentGame[0].players;
-  const findGameId = currentGame[0]._id;
-  const findGameIdplayer2 = currentGame[0].players.player2._id;
-  const findGameIdplayer3 = currentGame[0].players.player3._id;
-  const findGameIdplayer4 = currentGame[0].players.player4._id;
+  const players = currentGame?.players;
+  const findGameId = currentGame?._id;
+  const findGameIdplayer2 = currentGame?.players.player2._id;
+  const findGameIdplayer3 = currentGame?.players.player3._id;
+  const findGameIdplayer4 = currentGame?.players.player4._id;
+  const findDifficulty = currentGame?.difficulty;
 
   const gameId = JSON.parse(JSON.stringify(findGameId));
   const gameIdPlayer2 = JSON.parse(JSON.stringify(findGameIdplayer2));
   const gameIdPlayer3 = JSON.parse(JSON.stringify(findGameIdplayer3));
   const gameIdPlayer4 = JSON.parse(JSON.stringify(findGameIdplayer4));
+  const difficulty = JSON.parse(JSON.stringify(findDifficulty));
   //const questionId = JSON.parse(JSON.stringify(questionIdBeforeParse));
 
   return {
@@ -61,8 +62,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       //answers: JSON.parse(JSON.stringify(allTheReponses)),
       //goodAnswer: questionUsed.goodAnswer,
       players: players,
-      //questionId: questionId,
-      questionTest : JSON.parse(JSON.stringify(questionsList))
+      // questionId: questionId,
+      questionTest: JSON.parse(JSON.stringify(questionsList)),
+      difficulty: difficulty,
     },
   };
 };
@@ -73,13 +75,14 @@ const Game1: React.FC<{
   gameIdPlayer2: ObjectId;
   gameIdPlayer3: ObjectId;
   gameIdPlayer4: ObjectId;
-  question: string;
-  answers: string[];
-  goodAnswer: string;
+  // question: string;
+  // answers: string[];
+  // goodAnswer: string;
   players: any;
-  points: number;
-  questionId: ObjectId;
-  questionTest:any;
+  // points: number;
+  // questionId: ObjectId;
+  questionTest: any;
+  difficulty: string;
 }> = ({
   userDB,
   gameId,
@@ -91,8 +94,9 @@ const Game1: React.FC<{
   //goodAnswer,
   players,
   //points,
-  questionId,
+  // questionId,
   questionTest,
+  difficulty,
 }) => {
   const [timer, setTimer] = useState(30);
   const [isDone, setIsDone] = useState(false);
@@ -107,8 +111,24 @@ const Game1: React.FC<{
   const [isDoneIa4, setIsDoneIa4] = useState(false);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
-  const [question, setQuestion] = useState(Math.floor(Math.random() * questionTest.length))
-  console.log("Question test ============== ", question)
+  const [question, setQuestion] = useState(
+    Math.floor(Math.random() * questionTest.length)
+  );
+
+  // if (difficulty === "facile") {
+  //   setIaTimer2(20);
+  //   setIaTimer3(25);
+  //   setIaTimer4(29);
+  // } else if (difficulty === "moyen") {
+  //   setIaTimer2(15);
+  //   setIaTimer3(20);
+  //   setIaTimer4(24);
+  // } else {
+  //   setIaTimer2(10);
+  //   setIaTimer3(15);
+  //   setIaTimer4(19);
+  // }
+
   useEffect(() => {
     if (timer > 0) {
       setTimeout(() => timerReduce(), 1000);
@@ -119,13 +139,32 @@ const Game1: React.FC<{
       setDisableTime(true);
     }
   }, [timer, isDone]);
-  console.log("Wrong answers. ================= ", questionTest[question])
-  const answers: string[] = [...questionTest[question].responses, questionTest[question].goodAnswer]
-  const goodAnswer: string = questionTest[question].goodAnswer
-  const points: number = questionTest[question].points
-  // useEffect(() => {
-  //    answers = [...questionTest[question].responses, questionTest[question].goodAnswer]
-  // }, [question])
+
+  const answers: string[] = [
+    ...questionTest[question].responses,
+    questionTest[question].goodAnswer,
+  ];
+  const goodAnswer: string = questionTest[question].goodAnswer;
+  const points: number = questionTest[question].points;
+  const questionId: ObjectId = questionTest[question]._id;
+
+  function endOfManche(): any {
+    setQuestion(Math.floor(Math.random() * questionTest.length));
+    setTimer(30);
+    setIsDone(false);
+    setDisableTime;
+    setDisableTrue(false);
+    setDisableWrong(false);
+    setIaTimer2(10);
+    setIsDoneIa2(false);
+    setIaTimer3(15);
+    setIsDoneIa3(false);
+    setIaTimer4(20);
+    setIsDoneIa4(false);
+    setMessage("");
+    setResponse("");
+  }
+
   useEffect(() => {
     if (iATimer2 > 0) {
       setTimeout(() => timerReduceIa2(), 1000);
@@ -162,6 +201,8 @@ const Game1: React.FC<{
             body: JSON.stringify(temp),
           }).then((result) => router.push(result.url));
           setDisableTrue(true);
+          endOfManche();
+          endOfManche();
         } else {
           showResult(false, temp.pseudo2, temp.goodAnswer);
           fetch("/api/handle-answer-player2/wrong-answer", {
@@ -248,7 +289,7 @@ const Game1: React.FC<{
             body: JSON.stringify(temp),
           }).then((result) => router.push(result.url));
           setDisableTrue(true);
-
+          endOfManche();
         } else {
           showResult(false, temp.pseudo3, temp.goodAnswer);
           fetch("/api/handle-answer-player3/wrong-answer", {
@@ -328,6 +369,7 @@ const Game1: React.FC<{
             body: JSON.stringify(temp),
           }).then((result) => router.push(result.url));
           setDisableTrue(true);
+          endOfManche();
         } else {
           showResult(false, temp.pseudo4, temp.goodAnswer);
           fetch("/api/handle-answer-player4/wrong-answer", {
@@ -389,7 +431,6 @@ const Game1: React.FC<{
 
     if (clickedResponse === goodAnswer) {
       showResult(true, temp.pseudo1, temp.goodAnswer);
-      setDisableTrue(true);
       fetch("/api/handle-answer-player1/good-answer", {
         method: "POST",
         headers: {
@@ -397,6 +438,8 @@ const Game1: React.FC<{
         },
         body: JSON.stringify(temp),
       }).then((result) => router.push(result.url));
+      setDisableTrue(true);
+      endOfManche();
     } else {
       showResult(false, temp.pseudo1, temp.goodAnswer);
       setDisableWrong(true);
@@ -428,9 +471,12 @@ const Game1: React.FC<{
         {" "}
         9 points gagnants
       </div>
-      <div className={styles.description}> {questionTest[question].question}</div>
-      <div>{timer}</div>
-      <div>{message}</div>
+      <div className={styles.description}>
+        {" "}
+        {questionTest[question].question}
+      </div>
+      <div style={{ marginLeft: "20px" }}>{timer}</div>
+      <div style={{ marginLeft: "20px" }}>{message}</div>
       <div className="container">
         <div className="row">
           <div className="column">
