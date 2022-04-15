@@ -24,12 +24,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     .find()
     .toArray();
 
-  const questionUsed =
-    questionsList[Math.floor(Math.random() * questionsList.length)];
-  const questionIdBeforeParse = questionUsed._id;
-  const badresponses = questionUsed.responses;
-  const allTheReponses = [...badresponses, questionUsed.goodAnswer];
-  const shuffledResponses = allTheReponses.sort(() => Math.random() - 0.5);
+  // const questionUsed =
+  //   questionsList[Math.floor(Math.random() * questionsList.length)];
+  // const questionIdBeforeParse = questionUsed._id;
+  // const badresponses = questionUsed.responses;
+  // const allTheReponses = [...badresponses, questionUsed.goodAnswer];
+  //const shuffledResponses = allTheReponses.sort(() => Math.random() - 0.5);
 
   const currentGame = await mongodb
     .db()
@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const gameIdPlayer2 = JSON.parse(JSON.stringify(findGameIdplayer2));
   const gameIdPlayer3 = JSON.parse(JSON.stringify(findGameIdplayer3));
   const gameIdPlayer4 = JSON.parse(JSON.stringify(findGameIdplayer4));
-  const questionId = JSON.parse(JSON.stringify(questionIdBeforeParse));
+  //const questionId = JSON.parse(JSON.stringify(questionIdBeforeParse));
 
   return {
     props: {
@@ -56,12 +56,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       gameIdPlayer2: gameIdPlayer2,
       gameIdPlayer3: gameIdPlayer3,
       gameIdPlayer4: gameIdPlayer4,
-      question: questionUsed.question,
-      points: questionUsed.points,
-      answers: shuffledResponses,
-      goodAnswer: questionUsed.goodAnswer,
+      //question: questionUsed.question,
+      //points: questionUsed.points,
+      //answers: JSON.parse(JSON.stringify(allTheReponses)),
+      //goodAnswer: questionUsed.goodAnswer,
       players: players,
-      questionId: questionId,
+      //questionId: questionId,
+      questionTest : JSON.parse(JSON.stringify(questionsList))
     },
   };
 };
@@ -78,18 +79,20 @@ const Game1: React.FC<{
   players: any;
   points: number;
   questionId: ObjectId;
+  questionTest:any;
 }> = ({
   userDB,
   gameId,
   gameIdPlayer2,
   gameIdPlayer3,
   gameIdPlayer4,
-  question,
-  answers,
-  goodAnswer,
+  //question,
+  //answers,
+  //goodAnswer,
   players,
-  points,
+  //points,
   questionId,
+  questionTest,
 }) => {
   const [timer, setTimer] = useState(30);
   const [isDone, setIsDone] = useState(false);
@@ -104,7 +107,8 @@ const Game1: React.FC<{
   const [isDoneIa4, setIsDoneIa4] = useState(false);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
-
+  const [question, setQuestion] = useState(Math.floor(Math.random() * questionTest.length))
+  console.log("Question test ============== ", question)
   useEffect(() => {
     if (timer > 0) {
       setTimeout(() => timerReduce(), 1000);
@@ -115,7 +119,13 @@ const Game1: React.FC<{
       setDisableTime(true);
     }
   }, [timer, isDone]);
-
+  console.log("Wrong answers. ================= ", questionTest[question])
+  const answers: string[] = [...questionTest[question].responses, questionTest[question].goodAnswer]
+  const goodAnswer: string = questionTest[question].goodAnswer
+  const points: number = questionTest[question].points
+  // useEffect(() => {
+  //    answers = [...questionTest[question].responses, questionTest[question].goodAnswer]
+  // }, [question])
   useEffect(() => {
     if (iATimer2 > 0) {
       setTimeout(() => timerReduceIa2(), 1000);
@@ -160,7 +170,7 @@ const Game1: React.FC<{
               "Content-Type": "application/json",
             },
             body: JSON.stringify(temp),
-          }).then((result) => router.push(result.url));
+          });
         }
       } else {
         const temp = {
@@ -184,7 +194,7 @@ const Game1: React.FC<{
             "Content-Type": "application/json",
           },
           body: JSON.stringify(temp),
-        }).then((result) => router.push(result.url));
+        });
       }
 
       //créer les 3 IAs et leurs actions dans la DB
@@ -238,6 +248,7 @@ const Game1: React.FC<{
             body: JSON.stringify(temp),
           }).then((result) => router.push(result.url));
           setDisableTrue(true);
+
         } else {
           showResult(false, temp.pseudo3, temp.goodAnswer);
           fetch("/api/handle-answer-player3/wrong-answer", {
@@ -246,7 +257,7 @@ const Game1: React.FC<{
               "Content-Type": "application/json",
             },
             body: JSON.stringify(temp),
-          }).then((result) => router.push(result.url));
+          });
         }
       } else {
         const temp = {
@@ -271,7 +282,7 @@ const Game1: React.FC<{
             "Content-Type": "application/json",
           },
           body: JSON.stringify(temp),
-        }).then((result) => router.push(result.url));
+        });
       }
     }
   }, [iATimer3, isDoneIa3]);
@@ -325,7 +336,7 @@ const Game1: React.FC<{
               "Content-Type": "application/json",
             },
             body: JSON.stringify(temp),
-          }).then((result) => router.push(result.url));
+          });
         }
       } else {
         const temp = {
@@ -349,7 +360,7 @@ const Game1: React.FC<{
             "Content-Type": "application/json",
           },
           body: JSON.stringify(temp),
-        }).then((result) => router.push(result.url));
+        });
       }
     }
   }, [iATimer4, isDoneIa4]);
@@ -395,7 +406,7 @@ const Game1: React.FC<{
           "Content-Type": "application/json",
         },
         body: JSON.stringify(temp),
-      }).then((result) => router.push(result.url));
+      });
     }
   }
 
@@ -417,7 +428,7 @@ const Game1: React.FC<{
         {" "}
         9 points gagnants
       </div>
-      <div className={styles.description}> {question}</div>
+      <div className={styles.description}> {questionTest[question].question}</div>
       <div>{timer}</div>
       <div>{message}</div>
       <div className="container">

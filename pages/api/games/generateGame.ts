@@ -2,7 +2,6 @@ import { randomUUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 import router from "next/router";
 import { getDatabase } from "../../../src/database";
-import { v4 as uuidv4 } from "uuid";
 
 
 const handler = async (
