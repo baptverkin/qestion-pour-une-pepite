@@ -56,6 +56,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log("wrong id");
   }
 
-  res.redirect(307, `/games/complete-game/${gameId}`).end();
+  res.end();
+  // .redirect(307, `/games/complete-game/${gameId}`)
 };
 export default handler;

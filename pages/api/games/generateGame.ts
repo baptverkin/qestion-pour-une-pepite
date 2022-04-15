@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 import router from "next/router";
 import { getDatabase } from "../../../src/database";
