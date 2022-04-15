@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const questionId = req.body.questionId;
   const clickedResponse = req.body.clickedResponse;
   const timer = req.body.timer;
-  const answerIa2 = req.body.answerIa2;
+  const answerIa4 = req.body.answerIa4;
 
   const mongodb = await getDatabase();
 
@@ -21,22 +21,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .collection("current-games")
     .findOne({ _id: new ObjectId(gameId) });
 
-  if (game?.players.player2._id === _idPlayer2) {
-    const currentScore: number = game?.players.player2.score9PtsGagnant
+  if (game?.players.player4._id === _idPlayer4) {
+    const currentScore: number = game?.players.player4.score9PtsGagnant
     const numeroManche = game?.neufPointsGagnants.length;
-    // const updateQuestionId = await mongodb
-    //   .db()
-    //   .collection("current-games")
-    //   .updateOne(
-    //     { _id : new ObjectId(gameId) },
-    //     {
-    //       $set: {
-    //         [`neufPointsGagnants.${numeroManche-1}`]: {
-    //             questionId: questionId,
-    //           },
-    //         },
-    //       },
-    //   );
     const updateGame = await mongodb
       .db()
       .collection("current-games")
@@ -44,8 +31,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         { _id : new ObjectId(gameId) },
         {
           $set: {
-            [`neufPointsGagnants.${numeroManche-1}.player2`]: {
-                clickedResponse: answerIa2,
+            [`neufPointsGagnants.${numeroManche-1}.player4`]: {
+                clickedResponse: answerIa4,
                 correctAnswer: false,
                 score: 0,
                 time: timer,
@@ -53,7 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
       );
-
   } else {
     console.log("wrong id");
   }

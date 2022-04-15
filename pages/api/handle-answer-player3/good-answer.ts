@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const questionId = req.body.questionId;
   const clickedResponse = req.body.clickedResponse;
   const timer = req.body.timer;
-  const answerIa2 = req.body.answerIa2;
+  const answerIa3 = req.body.answerIa3;
 
   const mongodb = await getDatabase();
 
@@ -21,22 +21,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .collection("current-games")
     .findOne({ _id: new ObjectId(gameId) });
 
-  if (game?.players.player2._id === _idPlayer2) {
-    const currentScore: number = game?.players.player2.score9PtsGagnant
+  if (game?.players.player3._id === _idPlayer3) {
+    const currentScore: number = game?.players.player3.score9PtsGagnant
+
     const numeroManche = game?.neufPointsGagnants.length;
-    // const updateQuestionId = await mongodb
-    //   .db()
-    //   .collection("current-games")
-    //   .updateOne(
-    //     { _id : new ObjectId(gameId) },
-    //     {
-    //       $set: {
-    //         [`neufPointsGagnants.${numeroManche-1}`]: {
-    //             questionId: questionId,
-    //           },
-    //         },
-    //       },
-    //   );
     const updateGame = await mongodb
       .db()
       .collection("current-games")
@@ -44,16 +32,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         { _id : new ObjectId(gameId) },
         {
           $set: {
-            [`neufPointsGagnants.${numeroManche-1}.player2`]: {
-                clickedResponse: answerIa2,
-                correctAnswer: false,
-                score: 0,
+            [`neufPointsGagnants.${numeroManche-1}.player3`]: {
+                clickedResponse: answerIa3,
+                correctAnswer: true,
+                score: points,
                 time: timer,
               },
             },
           },
       );
-
+      const updateScore = await mongodb
+      .db()
+      .collection("current-games")
+      .updateOne(
+        { _id : new ObjectId(gameId) },
+        {
+          $set: {
+            ["players.player3.score9PtsGagnant"]: currentScore + points,
+            },
+          },
+      );
   } else {
     console.log("wrong id");
   }

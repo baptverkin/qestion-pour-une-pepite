@@ -93,9 +93,15 @@ const Game1: React.FC<{
 }) => {
   const [timer, setTimer] = useState(30);
   const [isDone, setIsDone] = useState(false);
-  const [disable, setDisable] = useState(false);
-  const [iATimer, setIaTimer] = useState(2);
-  const [isDoneIa, setIsDoneIa] = useState(false);
+  const [disableTime, setDisableTime] = useState(false);
+  const [disableTrue, setDisableTrue] = useState(false);
+  const [disableWrong, setDisableWrong] = useState(false);
+  const [iATimer2, setIaTimer2] = useState(10);
+  const [isDoneIa2, setIsDoneIa2] = useState(false);
+  const [iATimer3, setIaTimer3] = useState(15);
+  const [isDoneIa3, setIsDoneIa3] = useState(false);
+  const [iATimer4, setIaTimer4] = useState(20);
+  const [isDoneIa4, setIsDoneIa4] = useState(false);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
 
@@ -106,47 +112,72 @@ const Game1: React.FC<{
       setIsDone(true);
     }
     if (isDone) {
-      setDisable(true);
+      setDisableTime(true);
     }
   }, [timer, isDone]);
 
   useEffect(() => {
-    if (iATimer > 0) {
-      setTimeout(() => timerReduceIa(), 1000);
+    if (iATimer2 > 0) {
+      setTimeout(() => timerReduceIa2(), 1000);
     } else {
-      setIsDoneIa(true);
+      setIsDoneIa2(true);
     }
-    if (isDoneIa) {
-      const answerIa2 = answers[Math.floor(Math.random() * answers.length)];
+    if (isDoneIa2) {
+      if (disableTrue !== true && disableTime !== true) {
+        const answerIa2 = answers[Math.floor(Math.random() * answers.length)];
+        const temp = {
+          gameId: gameId,
+          _id: userDB._id,
+          gameIdPlayer2: gameIdPlayer2,
+          gameIdPlayer3: gameIdPlayer3,
+          gameIdPlayer4: gameIdPlayer4,
+          questionPoints: points,
+          pseudo1: players.player1.pseudo,
+          pseudo2: players.player2.pseudo,
+          pseudo3: players.player3.pseudo,
+          pseudo4: players.player4.pseudo,
+          questionId: questionId,
+          answerIa2: answerIa2,
+          goodAnswer: goodAnswer,
+          timer: timer,
+        };
 
-      const temp = {
-        gameId: gameId,
-        _id: userDB._id,
-        gameIdPlayer2: gameIdPlayer2,
-        gameIdPlayer3: gameIdPlayer3,
-        gameIdPlayer4: gameIdPlayer4,
-        questionPoints: points,
-        pseudo1: players.player1.pseudo,
-        pseudo2: players.player2.pseudo,
-        pseudo3: players.player3.pseudo,
-        pseudo4: players.player4.pseudo,
-        questionId: questionId,
-        answerIa2: answerIa2,
-        goodAnswer: goodAnswer,
-        timer: timer,
-      };
-
-      if (answerIa2 === goodAnswer) {
-        fetch("/api/handle-answer-player2/good-answer", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(temp),
-        }).then((result) => router.push(result.url));
-        setDisable(true);
+        if (answerIa2 === goodAnswer) {
+          showResult(true, temp.pseudo2, temp.goodAnswer);
+          fetch("/api/handle-answer-player2/good-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(temp),
+          }).then((result) => router.push(result.url));
+          setDisableTrue(true);
+        } else {
+          showResult(false, temp.pseudo2, temp.goodAnswer);
+          fetch("/api/handle-answer-player2/wrong-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(temp),
+          }).then((result) => router.push(result.url));
+        }
       } else {
-        showResult(false);
+        const temp = {
+          gameId: gameId,
+          _id: userDB._id,
+          gameIdPlayer2: gameIdPlayer2,
+          gameIdPlayer3: gameIdPlayer3,
+          gameIdPlayer4: gameIdPlayer4,
+          questionPoints: points,
+          pseudo1: players.player1.pseudo,
+          pseudo2: players.player2.pseudo,
+          pseudo3: players.player3.pseudo,
+          pseudo4: players.player4.pseudo,
+          questionId: questionId,
+          goodAnswer: goodAnswer,
+          timer: timer,
+        };
         fetch("/api/handle-answer-player2/wrong-answer", {
           method: "POST",
           headers: {
@@ -158,16 +189,173 @@ const Game1: React.FC<{
 
       //créer les 3 IAs et leurs actions dans la DB
       //envoyer la question suivante
-      // créer une nouvelle manche DB
+      //créer une nouvelle manche DB
       //reset tous les useStates
     }
-  }, [iATimer, isDoneIa]);
+  }, [iATimer2, isDoneIa2]);
 
   function timerReduce() {
     setTimer(timer - 1);
   }
-  function timerReduceIa() {
-    setIaTimer(iATimer - 1);
+  function timerReduceIa2() {
+    setIaTimer2(iATimer2 - 1);
+  }
+
+  useEffect(() => {
+    if (iATimer3 > 0) {
+      setTimeout(() => timerReduceIa3(), 1000);
+    } else {
+      setIsDoneIa3(true);
+    }
+    if (isDoneIa3) {
+      if (disableTrue !== true && disableTime !== true) {
+        const answerIa3 = answers[Math.floor(Math.random() * answers.length)];
+
+        const temp = {
+          gameId: gameId,
+          _id: userDB._id,
+          gameIdPlayer2: gameIdPlayer2,
+          gameIdPlayer3: gameIdPlayer3,
+          gameIdPlayer4: gameIdPlayer4,
+          questionPoints: points,
+          pseudo1: players.player1.pseudo,
+          pseudo2: players.player2.pseudo,
+          pseudo3: players.player3.pseudo,
+          pseudo4: players.player4.pseudo,
+          questionId: questionId,
+          answerIa3: answerIa3,
+          goodAnswer: goodAnswer,
+          timer: timer,
+        };
+
+        if (answerIa3 === goodAnswer) {
+          showResult(true, temp.pseudo3, temp.goodAnswer);
+          fetch("/api/handle-answer-player3/good-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(temp),
+          }).then((result) => router.push(result.url));
+          setDisableTrue(true);
+        } else {
+          showResult(false, temp.pseudo3, temp.goodAnswer);
+          fetch("/api/handle-answer-player3/wrong-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(temp),
+          }).then((result) => router.push(result.url));
+        }
+      } else {
+        const temp = {
+          gameId: gameId,
+          _id: userDB._id,
+          gameIdPlayer2: gameIdPlayer2,
+          gameIdPlayer3: gameIdPlayer3,
+          gameIdPlayer4: gameIdPlayer4,
+          questionPoints: points,
+          pseudo1: players.player1.pseudo,
+          pseudo2: players.player2.pseudo,
+          pseudo3: players.player3.pseudo,
+          pseudo4: players.player4.pseudo,
+          questionId: questionId,
+          goodAnswer: goodAnswer,
+          timer: timer,
+        };
+
+        fetch("/api/handle-answer-player3/wrong-answer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(temp),
+        }).then((result) => router.push(result.url));
+      }
+    }
+  }, [iATimer3, isDoneIa3]);
+
+  function timerReduceIa3() {
+    setIaTimer3(iATimer3 - 1);
+  }
+
+  useEffect(() => {
+    if (iATimer4 > 0) {
+      setTimeout(() => timerReduceIa4(), 1000);
+    } else {
+      setIsDoneIa4(true);
+    }
+    if (isDoneIa4) {
+      if (disableTrue !== true && disableTime !== true) {
+        const answerIa4 = answers[Math.floor(Math.random() * answers.length)];
+
+        const temp = {
+          gameId: gameId,
+          _id: userDB._id,
+          gameIdPlayer2: gameIdPlayer2,
+          gameIdPlayer3: gameIdPlayer3,
+          gameIdPlayer4: gameIdPlayer4,
+          questionPoints: points,
+          pseudo1: players.player1.pseudo,
+          pseudo2: players.player2.pseudo,
+          pseudo3: players.player3.pseudo,
+          pseudo4: players.player4.pseudo,
+          questionId: questionId,
+          answerIa4: answerIa4,
+          goodAnswer: goodAnswer,
+          timer: timer,
+        };
+
+        if (answerIa4 === goodAnswer) {
+          showResult(true, temp.pseudo4, temp.goodAnswer);
+          fetch("/api/handle-answer-player4/good-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(temp),
+          }).then((result) => router.push(result.url));
+          setDisableTrue(true);
+        } else {
+          showResult(false, temp.pseudo4, temp.goodAnswer);
+          fetch("/api/handle-answer-player4/wrong-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(temp),
+          }).then((result) => router.push(result.url));
+        }
+      } else {
+        const temp = {
+          gameId: gameId,
+          _id: userDB._id,
+          gameIdPlayer2: gameIdPlayer2,
+          gameIdPlayer3: gameIdPlayer3,
+          gameIdPlayer4: gameIdPlayer4,
+          questionPoints: points,
+          pseudo1: players.player1.pseudo,
+          pseudo2: players.player2.pseudo,
+          pseudo3: players.player3.pseudo,
+          pseudo4: players.player4.pseudo,
+          questionId: questionId,
+          goodAnswer: goodAnswer,
+          timer: timer,
+        };
+        fetch("/api/handle-answer-player4/wrong-answer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(temp),
+        }).then((result) => router.push(result.url));
+      }
+    }
+  }, [iATimer4, isDoneIa4]);
+
+  function timerReduceIa4() {
+    setIaTimer4(iATimer4 - 1);
   }
 
   function handleResponse(clickedResponse: string) {
@@ -189,7 +377,8 @@ const Game1: React.FC<{
     };
 
     if (clickedResponse === goodAnswer) {
-      showResult(true);
+      showResult(true, temp.pseudo1, temp.goodAnswer);
+      setDisableTrue(true);
       fetch("/api/handle-answer-player1/good-answer", {
         method: "POST",
         headers: {
@@ -197,10 +386,9 @@ const Game1: React.FC<{
         },
         body: JSON.stringify(temp),
       }).then((result) => router.push(result.url));
-
-      setDisable(true);
     } else {
-      showResult(false);
+      showResult(false, temp.pseudo1, temp.goodAnswer);
+      setDisableWrong(true);
       fetch("/api/handle-answer-player1/wrong-answer", {
         method: "POST",
         headers: {
@@ -211,11 +399,15 @@ const Game1: React.FC<{
     }
   }
 
-  function showResult(isThatAGoodResponse: boolean) {
+  function showResult(
+    isThatAGoodResponse: boolean,
+    pseudo: string,
+    goodAnswer: string
+  ) {
     if (isThatAGoodResponse) {
-      setMessage("Good answer ! 😁 ");
+      setMessage(`Congrats ${pseudo} ! The good answer was ${goodAnswer}`);
     } else {
-      setMessage("Wrong answer ! 😩");
+      setMessage(`${pseudo} picked a wrong answer !`);
     }
   }
 
@@ -234,9 +426,8 @@ const Game1: React.FC<{
             {" "}
             <button
               className="button button2"
-              disabled={disable}
+              disabled={disableTrue || disableWrong || disableTime}
               onClick={() => {
-                setDisable(true);
                 setResponse(answers[0]);
                 handleResponse(answers[0]);
               }}
@@ -247,9 +438,8 @@ const Game1: React.FC<{
           <div className="column">
             <button
               className="button button2"
-              disabled={disable}
+              disabled={disableTrue || disableWrong || disableTime}
               onClick={() => {
-                setDisable(true);
                 setResponse(answers[1]);
                 handleResponse(answers[1]);
               }}
@@ -264,9 +454,8 @@ const Game1: React.FC<{
             {" "}
             <button
               className="button button2"
-              disabled={disable}
+              disabled={disableTrue || disableWrong || disableTime}
               onClick={() => {
-                setDisable(true);
                 setResponse(answers[2]);
                 handleResponse(answers[2]);
               }}
@@ -277,9 +466,8 @@ const Game1: React.FC<{
           <div className="column">
             <button
               className="button button2"
-              disabled={disable}
+              disabled={disableTrue || disableWrong || disableTime}
               onClick={() => {
-                setDisable(true);
                 setResponse(answers[3]);
                 handleResponse(answers[3]);
               }}
@@ -293,9 +481,8 @@ const Game1: React.FC<{
             {" "}
             <button
               className="button button2"
-              disabled={disable}
+              disabled={disableTrue || disableWrong || disableTime}
               onClick={() => {
-                setDisable(true);
                 setResponse(answers[4]);
                 handleResponse(answers[4]);
               }}
@@ -306,9 +493,8 @@ const Game1: React.FC<{
           <div className="column">
             <button
               className="button button2"
-              disabled={disable}
+              disabled={disableTrue || disableWrong || disableTime}
               onClick={() => {
-                setDisable(true);
                 setResponse(answers[5]);
                 handleResponse(answers[5]);
               }}
