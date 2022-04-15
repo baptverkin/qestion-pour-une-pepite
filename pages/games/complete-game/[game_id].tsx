@@ -42,12 +42,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const findGameIdplayer3 = currentGame?.players.player3._id;
   const findGameIdplayer4 = currentGame?.players.player4._id;
   const findDifficulty = currentGame?.difficulty;
+  const findNumeroManche = currentGame?.neufPointsGagnants.length;
 
   const gameId = JSON.parse(JSON.stringify(findGameId));
   const gameIdPlayer2 = JSON.parse(JSON.stringify(findGameIdplayer2));
   const gameIdPlayer3 = JSON.parse(JSON.stringify(findGameIdplayer3));
   const gameIdPlayer4 = JSON.parse(JSON.stringify(findGameIdplayer4));
   const difficulty = JSON.parse(JSON.stringify(findDifficulty));
+  const numeroManche = JSON.parse(JSON.stringify(findNumeroManche));
+
   //const questionId = JSON.parse(JSON.stringify(questionIdBeforeParse));
 
   return {
@@ -65,6 +68,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       // questionId: questionId,
       questionTest: JSON.parse(JSON.stringify(questionsList)),
       difficulty: difficulty,
+      numeroManche: numeroManche,
     },
   };
 };
@@ -83,6 +87,7 @@ const Game1: React.FC<{
   // questionId: ObjectId;
   questionTest: any;
   difficulty: string;
+  numeroManche: number;
 }> = ({
   userDB,
   gameId,
@@ -97,6 +102,7 @@ const Game1: React.FC<{
   // questionId,
   questionTest,
   difficulty,
+  numeroManche,
 }) => {
   const [timer, setTimer] = useState(30);
   const [isDone, setIsDone] = useState(false);
@@ -114,6 +120,7 @@ const Game1: React.FC<{
   const [question, setQuestion] = useState(
     Math.floor(Math.random() * questionTest.length)
   );
+  const [numManche, setNumManche] = useState(numeroManche);
 
   // if (difficulty === "facile") {
   //   setIaTimer2(20);
@@ -130,15 +137,19 @@ const Game1: React.FC<{
   // }
 
   useEffect(() => {
-    if (timer > 0) {
-      setTimeout(() => timerReduce(), 1000);
-    } else {
+    const timer1 = setTimeout(() => timerReduce(), 1000);
+    if (timer <= 0 || disableTrue === true) {
       setIsDone(true);
+      return (): void => clearTimeout(timer1);
     }
     if (isDone) {
       setDisableTime(true);
     }
   }, [timer, isDone]);
+
+  function timerReduce() {
+    setTimer(timer - 1);
+  }
 
   const answers: string[] = [
     ...questionTest[question].responses,
@@ -268,9 +279,6 @@ const Game1: React.FC<{
     }
   }, [iATimer2, isDoneIa2]);
 
-  function timerReduce() {
-    setTimer(timer - 1);
-  }
   function timerReduceIa2() {
     setIaTimer2(iATimer2 - 1);
   }
