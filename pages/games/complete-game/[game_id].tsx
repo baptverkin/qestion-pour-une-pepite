@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import router from "next/router";
 import { ObjectId } from "mongodb";
 import Button from "react-bootstrap/esm/Button";
+import Link from "next/link";
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -469,9 +470,11 @@ const Game1: React.FC<{
             &nbsp;&nbsp;&nbsp;
             {players.player4.pseudo}: {player4Points}
             <br></br>
-            <Button className="btn btn-primary" href="/profile">
-              Back to my Profile &rarr;
-            </Button>
+            <Link href="/profile" passHref>
+              <button type="button" className="btn btn-primary">
+                Back to my Profile &rarr;
+              </button>
+            </Link>
           </div>
         ) : winnerPlayer2 ? (
           <div>
@@ -484,6 +487,12 @@ const Game1: React.FC<{
             {players.player3.pseudo}: {player3Points}
             &nbsp;&nbsp;&nbsp;
             {players.player4.pseudo}: {player4Points}
+            <br></br>
+            <Link href="/profile" passHref>
+              <button type="button" className="btn btn-primary">
+                Back to my Profile &rarr;
+              </button>
+            </Link>
           </div>
         ) : winnerPlayer3 ? (
           <div>
@@ -496,6 +505,12 @@ const Game1: React.FC<{
             {players.player3.pseudo}: {player3Points}
             &nbsp;&nbsp;&nbsp;
             {players.player4.pseudo}: {player4Points}
+            <br></br>
+            <Link href="/profile" passHref>
+              <button type="button" className="btn btn-primary">
+                Back to my Profile &rarr;
+              </button>
+            </Link>
           </div>
         ) : winnerPlayer4 ? (
           <div>
@@ -508,6 +523,12 @@ const Game1: React.FC<{
             {players.player3.pseudo}: {player3Points}
             &nbsp;&nbsp;&nbsp;
             {players.player4.pseudo}: {player4Points}
+            <br></br>
+            <Link href="/profile" passHref>
+              <button type="button" className="btn btn-primary">
+                Back to my Profile &rarr;
+              </button>
+            </Link>
           </div>
         ) : (
           <>
