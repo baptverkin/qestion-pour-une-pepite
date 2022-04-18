@@ -8,9 +8,15 @@ import router from "next/router";
 import { ObjectId } from "mongodb";
 import Button from "react-bootstrap/esm/Button";
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  query,
+}) => {
   const session = getSession(req, res);
   const email = session?.user.email;
+  const gameIdTest = query.game_id?.toString();
+
   const mongodb = await getDatabase();
 
   const response = await mongodb
@@ -26,13 +32,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     .toArray();
   const questionTest = JSON.parse(JSON.stringify(questionsList));
 
-  const currentGame = await mongodb
+  const findCurrentGame = await mongodb
     .db()
     .collection("current-games")
-    .findOne({ email: email, finished: false });
+    .findOne({ _id: new ObjectId(gameIdTest) });
 
+  const currentGame = JSON.parse(JSON.stringify(findCurrentGame));
   const players = currentGame?.players;
   const findGameId = currentGame?._id;
+
   const findGameIdplayer2 = currentGame?.players.player2._id;
   const findGameIdplayer3 = currentGame?.players.player3._id;
   const findGameIdplayer4 = currentGame?.players.player4._id;
@@ -49,6 +57,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return {
     props: {
       userDB: userDB,
+      finish: currentGame?.finished,
       gameId: gameId,
       gameIdPlayer2: gameIdPlayer2,
       gameIdPlayer3: gameIdPlayer3,
@@ -63,6 +72,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
 const Game1: React.FC<{
   userDB: any;
+  finished: boolean;
   gameId: ObjectId;
   gameIdPlayer2: ObjectId;
   gameIdPlayer3: ObjectId;
@@ -73,6 +83,7 @@ const Game1: React.FC<{
   numeroManche: number;
 }> = ({
   userDB,
+  finished,
   gameId,
   gameIdPlayer2,
   gameIdPlayer3,
@@ -93,11 +104,18 @@ const Game1: React.FC<{
   const [answers, setAnswers] = useState([""]);
   const [goodAnswer, setGoodAnswer] = useState("");
   const [points, setPoints] = useState(0);
+  const [player1Points, setPlayer1Points] = useState(0);
+  const [player2Points, setPlayer2Points] = useState(0);
+  const [player3Points, setPlayer3Points] = useState(0);
+  const [player4Points, setPlayer4Points] = useState(0);
   const [questionId, setQuestionId] = useState("");
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [question, setQuestion] = useState(
     Math.floor(Math.random() * questionTest.length)
+  );
+  const [shuffleAnswer, setShuffleAnswer] = useState(
+    (a: any, b: any): any => 0.5 - Math.random()
   );
   const [winnerPlayer1, setWinnerPlayer1] = useState(false);
   const [winnerPlayer2, setWinnerPlayer2] = useState(false);
@@ -127,10 +145,14 @@ const Game1: React.FC<{
   useEffect(() => {
     if (timer > 0) {
       const timer1 = setTimeout(() => setTimer(timer - 1), 1000);
-      setAnswers([
+
+      const arrAnswers = [
         ...questionTest[question].responses,
         questionTest[question].goodAnswer,
-      ]);
+      ].sort(() => shuffleAnswer);
+
+      console.log("arr answer", arrAnswers);
+      setAnswers(arrAnswers);
       setGoodAnswer(questionTest[question].goodAnswer);
       setPoints(questionTest[question].points);
       setQuestionId(questionTest[question]._id);
@@ -170,6 +192,7 @@ const Game1: React.FC<{
               body: JSON.stringify(bodyDataIa2),
             });
             setDisableTrue(true);
+            setPlayer2Points(players.player2.score9PtsGagnant + points);
           } else {
             showResult(
               false,
@@ -216,6 +239,7 @@ const Game1: React.FC<{
               body: JSON.stringify(bodyDataIa3),
             });
             setDisableTrue(true);
+            setPlayer3Points(players.player3.score9PtsGagnant + points);
           } else {
             showResult(
               false,
@@ -262,6 +286,7 @@ const Game1: React.FC<{
               body: JSON.stringify(bodyDataIa4),
             });
             setDisableTrue(true);
+            setPlayer4Points(players.player4.score9PtsGagnant + points);
           } else {
             showResult(
               false,
@@ -312,6 +337,7 @@ const Game1: React.FC<{
         body: JSON.stringify(bodyDataPlayer1),
       });
       setDisableTrue(true);
+      setPlayer1Points(players.player1.score9PtsGagnant + points);
     } else {
       showResult(
         false,
@@ -356,28 +382,57 @@ const Game1: React.FC<{
     setIaTimer3(15);
     setMessage("");
     setResponse("");
+    setShuffleAnswer((a: any, b: any): any => 0.5 - Math.random());
 
-    if (players.player1.score9PtsGagnant >= 9) {
+    if (player1Points >= 9) {
       setWinnerPlayer1(true);
       setMessageWinnerPlayer1(
         `Congrats ${players.player1.pseudo}, you won the game `
       );
-    } else if (players.player2.score9PtsGagnant >= 9) {
+      fetch("/api/handle-end-of-game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
+    } else if (player2Points >= 9) {
       setWinnerPlayer2(true);
       console.log(winnerPlayer2);
       setMessageWinnerPlayer2(
         `Congrats ${players.player2.pseudo}, you won the game `
       );
-    } else if (players.player3.score9PtsGagnant >= 9) {
+      fetch("/api/handle-end-of-game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
+    } else if (player3Points >= 9) {
       setWinnerPlayer3(true);
       setMessageWinnerPlayer3(
         `Congrats ${players.player3.pseudo}, you won the game `
       );
-    } else if (players.player4.score9PtsGagnant >= 9) {
+      fetch("/api/handle-end-of-game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
+    } else if (player4Points >= 9) {
       setWinnerPlayer4(true);
       setMessageWinnerPlayer4(
         `Congrats ${players.player4.pseudo}, you won the game `
       );
+      fetch("/api/handle-end-of-game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
     }
 
     fetch("/api/games/generateManche", {
@@ -389,136 +444,192 @@ const Game1: React.FC<{
     }).then((result) => router.push(result.url));
   }
 
-  return (
-    <Layout>
-      <div className={styles.title} style={{ marginTop: "30px" }}>
-        {" "}
-        9 points gagnants
-      </div>
-      {winnerPlayer1 ? (
-        messageWinnerPlayer1
-      ) : winnerPlayer2 ? (
-        messageWinnerPlayer2
-      ) : winnerPlayer3 ? (
-        messageWinnerPlayer3
-      ) : winnerPlayer4 ? (
-        messageWinnerPlayer4
-      ) : (
-        <>
-          <div className={styles.description}>
-            {" "}
-            {questionTest[question].question}
+  if (finished) {
+    return (
+      <Layout>
+        <p>Test</p>
+      </Layout>
+    );
+  } else {
+    return (
+      <Layout>
+        <div className={styles.title} style={{ marginTop: "30px" }}>
+          {" "}
+          9 points gagnants
+        </div>
+        {winnerPlayer1 ? (
+          <div>
+            {messageWinnerPlayer1}
+            <br></br>
+            {players.player1.pseudo}: {player1Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player2.pseudo}: {player2Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player3.pseudo}: {player3Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player4.pseudo}: {player4Points}
+            <br></br>
+            <Button className="btn btn-primary" href="/profile">
+              Back to my Profile &rarr;
+            </Button>
           </div>
-          <div style={{ marginLeft: "20px" }}>{timer}</div>
-          <div style={{ marginLeft: "20px" }}>{message}</div> <br></br>
-          <div className="container">
-            <div className="row">
-              <div className="column">
-                {" "}
-                <button
-                  className="button button2"
-                  disabled={disableTrue || disableWrong || disableTime}
-                  onClick={() => {
-                    setResponse(answers[0]);
-                    handleResponse(answers[0]);
-                  }}
-                >
-                  {answers[0]}
-                </button>
-              </div>
-              <div className="column">
-                <button
-                  className="button button2"
-                  disabled={disableTrue || disableWrong || disableTime}
-                  onClick={() => {
-                    setResponse(answers[1]);
-                    handleResponse(answers[1]);
-                  }}
-                >
-                  {answers[1]}
-                </button>
-              </div>
-            </div>
-            <div className="row">
-              <div className="column">
-                {" "}
-                <button
-                  className="button button2"
-                  disabled={disableTrue || disableWrong || disableTime}
-                  onClick={() => {
-                    setResponse(answers[2]);
-                    handleResponse(answers[2]);
-                  }}
-                >
-                  {answers[2]}
-                </button>
-              </div>
-              <div className="column">
-                <button
-                  className="button button2"
-                  disabled={disableTrue || disableWrong || disableTime}
-                  onClick={() => {
-                    setResponse(answers[3]);
-                    handleResponse(answers[3]);
-                  }}
-                >
-                  {answers[3]}
-                </button>
-              </div>
-            </div>
-            <div className="row">
-              <div className="column">
-                {" "}
-                <button
-                  className="button button2"
-                  disabled={disableTrue || disableWrong || disableTime}
-                  onClick={() => {
-                    setResponse(answers[4]);
-                    handleResponse(answers[4]);
-                  }}
-                >
-                  {answers[4]}
-                </button>
-              </div>
-              <div className="column">
-                <button
-                  className="button button2"
-                  disabled={disableTrue || disableWrong || disableTime}
-                  onClick={() => {
-                    setResponse(answers[5]);
-                    handleResponse(answers[5]);
-                  }}
-                >
-                  {answers[5]}
-                </button>
-              </div>
-            </div>
+        ) : winnerPlayer2 ? (
+          <div>
+            {messageWinnerPlayer2}
             <br></br>
-            <div>
-              {players.player1.pseudo}: {players.player1.score9PtsGagnant}
-              &nbsp;&nbsp;&nbsp;
-              {players.player2.pseudo}: {players.player2.score9PtsGagnant}
-              &nbsp;&nbsp;&nbsp;
-              {players.player3.pseudo}: {players.player3.score9PtsGagnant}
-              &nbsp;&nbsp;&nbsp;
-              {players.player4.pseudo}: {players.player4.score9PtsGagnant}
-            </div>{" "}
-            <br></br>
-            <div>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={endOfManche}
-              >
-                Next question &rarr;
-              </button>
-            </div>
-            <br></br>
+            {players.player1.pseudo}: {player1Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player2.pseudo}: {player2Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player3.pseudo}: {player3Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player4.pseudo}: {player4Points}
           </div>
-        </>
-      )}
-    </Layout>
-  );
+        ) : winnerPlayer3 ? (
+          <div>
+            {messageWinnerPlayer3}
+            <br></br>
+            {players.player1.pseudo}: {player1Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player2.pseudo}: {player2Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player3.pseudo}: {player3Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player4.pseudo}: {player4Points}
+          </div>
+        ) : winnerPlayer4 ? (
+          <div>
+            {messageWinnerPlayer4}
+            <br></br>
+            {players.player1.pseudo}: {player1Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player2.pseudo}: {player2Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player3.pseudo}: {player3Points}
+            &nbsp;&nbsp;&nbsp;
+            {players.player4.pseudo}: {player4Points}
+          </div>
+        ) : (
+          <>
+            <div className={styles.description}>
+              {" "}
+              {questionTest[question].question}
+            </div>
+            {disableTrue ? (
+              <></>
+            ) : (
+              <div style={{ marginLeft: "20px" }}>{timer}</div>
+            )}
+            <div style={{ marginLeft: "20px" }}>{message}</div> <br></br>
+            <div className="container">
+              <div className="row">
+                <div className="column">
+                  {" "}
+                  <button
+                    className="button button2"
+                    disabled={disableTrue || disableWrong || disableTime}
+                    onClick={() => {
+                      setResponse(answers[0]);
+                      handleResponse(answers[0]);
+                    }}
+                  >
+                    {answers[0]}
+                  </button>
+                </div>
+                <div className="column">
+                  <button
+                    className="button button2"
+                    disabled={disableTrue || disableWrong || disableTime}
+                    onClick={() => {
+                      setResponse(answers[1]);
+                      handleResponse(answers[1]);
+                    }}
+                  >
+                    {answers[1]}
+                  </button>
+                </div>
+              </div>
+              <div className="row">
+                <div className="column">
+                  {" "}
+                  <button
+                    className="button button2"
+                    disabled={disableTrue || disableWrong || disableTime}
+                    onClick={() => {
+                      setResponse(answers[2]);
+                      handleResponse(answers[2]);
+                    }}
+                  >
+                    {answers[2]}
+                  </button>
+                </div>
+                <div className="column">
+                  <button
+                    className="button button2"
+                    disabled={disableTrue || disableWrong || disableTime}
+                    onClick={() => {
+                      setResponse(answers[3]);
+                      handleResponse(answers[3]);
+                    }}
+                  >
+                    {answers[3]}
+                  </button>
+                </div>
+              </div>
+              <div className="row">
+                <div className="column">
+                  {" "}
+                  <button
+                    className="button button2"
+                    disabled={disableTrue || disableWrong || disableTime}
+                    onClick={() => {
+                      setResponse(answers[4]);
+                      handleResponse(answers[4]);
+                    }}
+                  >
+                    {answers[4]}
+                  </button>
+                </div>
+                <div className="column">
+                  <button
+                    className="button button2"
+                    disabled={disableTrue || disableWrong || disableTime}
+                    onClick={() => {
+                      setResponse(answers[5]);
+                      handleResponse(answers[5]);
+                    }}
+                  >
+                    {answers[5]}
+                  </button>
+                </div>
+              </div>
+              <br></br>
+              <div>
+                {players.player1.pseudo}: {player1Points}
+                &nbsp;&nbsp;&nbsp;
+                {players.player2.pseudo}: {player2Points}
+                &nbsp;&nbsp;&nbsp;
+                {players.player3.pseudo}: {player3Points}
+                &nbsp;&nbsp;&nbsp;
+                {players.player4.pseudo}: {player4Points}
+              </div>{" "}
+              <br></br>
+              <div>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={endOfManche}
+                >
+                  Next question &rarr;
+                </button>
+              </div>
+              <br></br>
+            </div>
+          </>
+        )}
+      </Layout>
+    );
+  }
 };
 
 export default Game1;
