@@ -105,6 +105,7 @@ const Game1: React.FC<{
   numeroManche,
 }) => {
   const [timer, setTimer] = useState(30);
+  const [idTimer, setIdTimer] = useState<NodeJS.Timeout | undefined>();
   const [isDone, setIsDone] = useState(false);
   const [disableTime, setDisableTime] = useState(false);
   const [disableTrue, setDisableTrue] = useState(false);
@@ -137,12 +138,11 @@ const Game1: React.FC<{
   // }
 
   useEffect(() => {
-    const timer1 = setTimeout(() => timerReduce(), 1000);
-    if (timer <= 0 || disableTrue === true) {
+    if (timer > 0) {
+      const timer1 = setTimeout(() => timerReduce(), 1000);
+      return () => clearTimeout(timer1);
+    } else if (timer <= 0 || disableTrue === true) {
       setIsDone(true);
-      return (): void => clearTimeout(timer1);
-    }
-    if (isDone) {
       setDisableTime(true);
     }
   }, [timer, isDone]);
@@ -155,6 +155,7 @@ const Game1: React.FC<{
     ...questionTest[question].responses,
     questionTest[question].goodAnswer,
   ];
+  // const answers = allAnswers.sort(() => Math.random() - 0.5);
   const goodAnswer: string = questionTest[question].goodAnswer;
   const points: number = questionTest[question].points;
   const questionId: ObjectId = questionTest[question]._id;
@@ -163,7 +164,7 @@ const Game1: React.FC<{
     setQuestion(Math.floor(Math.random() * questionTest.length));
     setTimer(30);
     setIsDone(false);
-    setDisableTime;
+    setDisableTime(false);
     setDisableTrue(false);
     setDisableWrong(false);
     setIaTimer2(10);
@@ -174,6 +175,9 @@ const Game1: React.FC<{
     setIsDoneIa4(false);
     setMessage("");
     setResponse("");
+    if (idTimer !== undefined) {
+      clearTimeout(idTimer);
+    }
 
     const temp = {
       gameId: gameId,
@@ -201,12 +205,7 @@ const Game1: React.FC<{
   }
 
   useEffect(() => {
-    if (iATimer2 > 0) {
-      setTimeout(() => timerReduceIa2(), 1000);
-    } else {
-      setIsDoneIa2(true);
-    }
-    if (isDoneIa2) {
+    if (timer === iATimer2) {
       if (disableTrue !== true && disableTime !== true) {
         const answerIa2 = answers[Math.floor(Math.random() * answers.length)];
         const temp = {
@@ -277,19 +276,10 @@ const Game1: React.FC<{
       //créer une nouvelle manche DB
       //reset tous les useStates
     }
-  }, [iATimer2, isDoneIa2]);
-
-  function timerReduceIa2() {
-    setIaTimer2(iATimer2 - 1);
-  }
+  }, [timer]);
 
   useEffect(() => {
-    if (iATimer3 > 0) {
-      setTimeout(() => timerReduceIa3(), 1000);
-    } else {
-      setIsDoneIa3(true);
-    }
-    if (isDoneIa3) {
+    if (timer === iATimer3) {
       if (disableTrue !== true && disableTime !== true) {
         const answerIa3 = answers[Math.floor(Math.random() * answers.length)];
 
@@ -357,19 +347,10 @@ const Game1: React.FC<{
         });
       }
     }
-  }, [iATimer3, isDoneIa3]);
-
-  function timerReduceIa3() {
-    setIaTimer3(iATimer3 - 1);
-  }
+  }, [timer]);
 
   useEffect(() => {
-    if (iATimer4 > 0) {
-      setTimeout(() => timerReduceIa4(), 1000);
-    } else {
-      setIsDoneIa4(true);
-    }
-    if (isDoneIa4) {
+    if (timer === iATimer4) {
       if (disableTrue !== true && disableTime !== true) {
         const answerIa4 = answers[Math.floor(Math.random() * answers.length)];
 
@@ -436,11 +417,7 @@ const Game1: React.FC<{
         });
       }
     }
-  }, [iATimer4, isDoneIa4]);
-
-  function timerReduceIa4() {
-    setIaTimer4(iATimer4 - 1);
-  }
+  }, [timer]);
 
   function handleResponse(clickedResponse: string) {
     const temp = {
@@ -482,10 +459,6 @@ const Game1: React.FC<{
         body: JSON.stringify(temp),
       });
     }
-  }
-
-  if (disableTrue === true || isDone === true) {
-    endOfManche();
   }
 
   function showResult(
@@ -594,6 +567,9 @@ const Game1: React.FC<{
               {answers[5]}
             </button>
           </div>
+        </div>
+        <div>
+          <button onClick={endOfManche}>Next question</button>
         </div>
         <div>
           {players.player1.pseudo}: {players.player1.score9PtsGagnant}
