@@ -21,8 +21,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const APP_KEY = process.env.APP_KEY;
   const APP_CLUSTER = process.env.APP_CLUSTER;
 
-
-
   const player1 = await mongodb
     .db()
     .collection("users")
@@ -117,7 +115,8 @@ const GameConfig: React.FC<{
 }) => {
   const [channel, setChannel] = React.useState<Channel>();
   const [loading, setLoading] = React.useState(false);
-  const [difficulty, setDifficulty] = React.useState("");
+  const [difficulty, setDifficulty] = React.useState("facile");
+
   useEffect(() => {
     const pusher = new Pusher(`${appKey}`, {
       cluster: `${cluster}`,
@@ -131,7 +130,6 @@ const GameConfig: React.FC<{
     setLoading(true);
     fetch(`/api/pusher/pusher?pseudo=${pseudo}`).then(() => setLoading(false));
   };
-
 
   const handleButtons = (e: any) => {
     setDifficulty(e.target.value);
