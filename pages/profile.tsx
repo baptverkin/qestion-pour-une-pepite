@@ -106,7 +106,7 @@ const Profile: React.FC<{
               </p>
             </Tab>
           </Tabs>
-          <Link href="/games/config/index-multi-joueurs" passHref={true}>
+          <Link href="/games/config" passHref={true}>
             <Button
               variant="primary"
               style={{
@@ -116,7 +116,19 @@ const Profile: React.FC<{
                 marginBottom: "1em",
               }}
             >
-              Commencez à jouer &rarr;
+              Jouer contre des IA &rarr;
+            </Button>
+          </Link>
+          <Link href="/games/config/index-multi-joueurs" passHref={true}>
+            <Button
+              style={{
+                textAlign: "center",
+                marginLeft: "40%",
+                marginRight: "40%",
+                marginBottom: "1em",
+              }}
+            >
+              Jouer en multijoueur &rarr;
             </Button>
           </Link>
         </Card>
