@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import Pusher from "pusher-js";
+import Pusher, { Channel } from "pusher-js";
 import React, { useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { Layout } from "../../components/layout";
@@ -15,28 +15,50 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
+const DisplayNames: React.FC<{ channel?: Channel }> = ({ channel }) => {
+  const [names, setNames] = React.useState("");
+  useEffect(() => {
+    if (channel) {
+      channel.bind("test-event", (data: any) => {
+        console.log(data);
+        setNames(names + data.name);
+      });
+      return () => {
+        channel.unbind("test-event");
+      };
+    }
+  }, [channel, names]);
+  return <li>{names}</li>;
+};
+
 const Tests: React.FC<{
   appKey: string;
   cluster: string;
 }> = ({ appKey, cluster }) => {
-  const [names, setNames] = React.useState("");
+  const [channel, setChannel] = React.useState<Channel>();
+  const [loading, setLoading] = React.useState(false);
   useEffect(() => {
     const pusher = new Pusher(`${appKey}`, {
       cluster: `${cluster}`,
     });
 
     const channel = pusher.subscribe("tests");
-    channel.bind("test-event", (data: any) => {
-      setNames(data.name);
-    });
+    setChannel(channel);
   }, [cluster, appKey]);
+
+  const handler = () => {
+    setLoading(true);
+    fetch("/api/pusher/pusher").then(() => setLoading(false));
+  };
 
   return (
     <Layout>
       <div className="container">
-        {names}
+        <DisplayNames channel={channel} />
         <br />
-        <Button href="/api/pusher/pusher">Click me</Button>
+        <Button onClick={handler} disabled={loading}>
+          Click me
+        </Button>
       </div>
     </Layout>
   );

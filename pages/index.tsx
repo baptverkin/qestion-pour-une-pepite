@@ -1,5 +1,4 @@
-import { useUser } from "@auth0/nextjs-auth0";
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps } from "next";
 import Link from "next/link";
 import { Layout } from "../components/layout";
 import styles from "../styles/Home.module.css";
