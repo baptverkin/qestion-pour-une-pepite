@@ -3,7 +3,8 @@ import { ObjectId } from "mongodb";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import router from "next/router";
-import React from "react";
+import Pusher, { Channel } from "pusher-js";
+import React, { useEffect } from "react";
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { Layout } from "../../../components/layout";
 import { getDatabase } from "../../../src/database";
@@ -16,6 +17,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const emailPlayer4 = "iafenn@fewlines.com";
 
   const mongodb = await getDatabase();
+
+  const APP_KEY = process.env.APP_KEY;
+  const APP_CLUSTER = process.env.APP_CLUSTER;
+
+
 
   const player1 = await mongodb
     .db()
@@ -52,8 +58,36 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       pseudoPlayer3: player3.pseudo,
       _idPlayer4: player4._id,
       pseudoPlayer4: player4.pseudo,
+      appKey: APP_KEY,
+      cluster: APP_CLUSTER,
     },
   };
+};
+
+const DisplayNames: React.FC<{ channel?: Channel }> = ({ channel }) => {
+  const [names, setNames] = React.useState([]);
+  useEffect(() => {
+    if (channel) {
+      channel.bind("test-event", (data: { pseudo: never }) => {
+        setNames((currentNames) => {
+          if (currentNames.includes(data.pseudo) === false) {
+            return [...currentNames, data.pseudo];
+          }
+          return currentNames;
+        });
+      });
+      return () => {
+        channel.unbind("test-event");
+      };
+    }
+  }, [channel, names]);
+  return (
+    <div>
+      {names.map((name) => {
+        return <li key={Math.random()}>{name}</li>;
+      })}
+    </div>
+  );
 };
 
 const GameConfig: React.FC<{
@@ -66,6 +100,8 @@ const GameConfig: React.FC<{
   pseudoPlayer3: string;
   _idPlayer4: ObjectId;
   pseudoPlayer4: string;
+  appKey: string;
+  cluster: string;
 }> = ({
   _id,
   pseudo,
@@ -76,8 +112,26 @@ const GameConfig: React.FC<{
   pseudoPlayer2,
   pseudoPlayer3,
   pseudoPlayer4,
+  appKey,
+  cluster,
 }) => {
+  const [channel, setChannel] = React.useState<Channel>();
+  const [loading, setLoading] = React.useState(false);
   const [difficulty, setDifficulty] = React.useState("");
+  useEffect(() => {
+    const pusher = new Pusher(`${appKey}`, {
+      cluster: `${cluster}`,
+    });
+
+    const channel = pusher.subscribe("tests");
+    setChannel(channel);
+  }, [cluster, appKey]);
+
+  const handler = () => {
+    setLoading(true);
+    fetch(`/api/pusher/pusher?pseudo=${pseudo}`).then(() => setLoading(false));
+  };
+
 
   const handleButtons = (e: any) => {
     setDifficulty(e.target.value);
@@ -114,14 +168,19 @@ const GameConfig: React.FC<{
     <Layout>
       <div className="container">
         <h3>Configurer la partie :</h3>
-        <label>Joueur 1 : </label> {pseudo}
+        {/* <label>Joueur 1 : </label> {pseudo}
         <br />
         <label>Joueur 2 : </label> {pseudoPlayer2}
         <br />
         <label>Joueur 3 : </label> {pseudoPlayer3}
         <br />
-        <label>Joueur 4 : </label> {pseudoPlayer4}
+        <label>Joueur 4 : </label> {pseudoPlayer4} */}
         <br />
+        <DisplayNames channel={channel} />
+        <br />
+        <Button onClick={handler} disabled={loading}>
+          Join party
+        </Button>
         <br />
         <h4>Choix de la difficulté : {difficulty} </h4>
         <ButtonGroup aria-label="Basic example">
