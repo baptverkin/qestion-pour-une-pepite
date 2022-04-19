@@ -9,25 +9,29 @@ import { getDatabase } from "../src/database";
 import styles from "../styles/Home.module.css";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import { v4 as uuidv4 } from "uuid";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
   const email = session?.user.email;
-
   const mongodb = await getDatabase();
   const response = await mongodb
     .db()
     .collection("users")
     .findOne({ email: email });
-  const usersDb = JSON.parse(JSON.stringify(response));
+  const userDb = JSON.parse(JSON.stringify(response));
 
+  const responses = await mongodb.db().collection("users").find().toArray();
+  const usersSorted = responses.sort((a:any,b:any) => b.victories - a.victories);
+  const usersDb = JSON.parse(JSON.stringify(usersSorted));
   return {
     props: {
-      _id: usersDb._id,
-      pseudo: usersDb.pseudo,
-      victories: usersDb.victories,
-      playedGames: usersDb.playedGames,
-      email: usersDb.email,
+      _id: userDb._id,
+      pseudo: userDb.pseudo,
+      victories: userDb.victories,
+      playedGames: userDb.playedGames,
+      email: userDb.email,
+      leaderBoard: usersDb
     },
   };
 };
@@ -38,7 +42,9 @@ const Profile: React.FC<{
   victories: number;
   playedGames: number;
   email: string;
-}> = ({ _id, pseudo, victories, playedGames, email }) => {
+  leaderBoard:any
+}> = ({ _id, pseudo, victories, playedGames, email, leaderBoard}) => {
+  console.log("LeaderBord =========",leaderBoard)
   return (
     <>
       <Layout>
@@ -166,6 +172,11 @@ const Profile: React.FC<{
             </Card>
           </div>
         </div>
+        <div>
+        {leaderBoard.map((element: any, index:number) => (
+          <h3 key={uuidv4()}>pseudo:{element.pseudo} + victories: {element.victories} + played Games: {element.playedGames} ranking: #{index+1}</h3>
+        ))}
+      </div>
       </Layout>
     </>
   );
