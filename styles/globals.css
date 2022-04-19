@@ -61,8 +61,13 @@ a {
 .button2:disabled {
   color: rgb(239, 230, 230);
   border: 2px solid rgb(239, 230, 230);
-
-
 }
 
+.leaderboard {
+  padding: auto;
+  margin: auto;
+}
 
+.leaderboard>p {
+  font-size: 22px;
+}
