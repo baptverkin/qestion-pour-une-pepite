@@ -94,7 +94,9 @@ const Game1: React.FC<{
   difficulty,
   numeroManche,
 }) => {
-  const [timer, setTimer] = useState(30);
+  const maxTimer = 30;
+
+  const [timer, setTimer] = useState(maxTimer);
   const [isDone, setIsDone] = useState(false);
   const [disableTime, setDisableTime] = useState(false);
   const [disableTrue, setDisableTrue] = useState(false);
@@ -116,9 +118,7 @@ const Game1: React.FC<{
   const [question, setQuestion] = useState(
     Math.floor(Math.random() * questionArray.length)
   );
-  const [shuffleAnswer, setShuffleAnswer] = useState(
-    (): any => Math.random() - 0.5
-  );
+  // const [shuffleAnswer, setShuffleAnswer] = useState(0);
   const [winnerPlayer1, setWinnerPlayer1] = useState(false);
   const [winnerPlayer2, setWinnerPlayer2] = useState(false);
   const [winnerPlayer3, setWinnerPlayer3] = useState(false);
@@ -127,10 +127,6 @@ const Game1: React.FC<{
   const [messageWinnerPlayer2, setMessageWinnerPlayer2] = useState("");
   const [messageWinnerPlayer3, setMessageWinnerPlayer3] = useState("");
   const [messageWinnerPlayer4, setMessageWinnerPlayer4] = useState("");
-
-  console.log("question array length", questionArray.length);
-
-  console.log("sufflesAnswer number", shuffleAnswer);
 
   const bodyData = {
     gameId: gameId,
@@ -156,13 +152,16 @@ const Game1: React.FC<{
         ...questionArray[question].responses,
         questionArray[question].goodAnswer,
       ];
+
+      // const shuffleArrAnswer = arrAnswers.sort(() => shuffleAnswer);
+
+      // setAnswers(shuffleArrAnswer);
       console.log("ArrAnswers", arrAnswers);
+      console.log("Shuffle answer", answers);
 
-      const shuffleArrAnswer = arrAnswers.sort(() => shuffleAnswer);
-
-      console.log("Shuffle answer", shuffleArrAnswer);
-
-      setAnswers(arrAnswers);
+      if (timer === maxTimer) {
+        setAnswers(arrAnswers.sort(() => Math.random() - 0.5));
+      }
       setGoodAnswer(questionArray[question].goodAnswer);
       setPoints(questionArray[question].points);
       setQuestionId(questionArray[question]._id);
@@ -387,9 +386,6 @@ const Game1: React.FC<{
     });
     setQuestionArray(newQuestionArray);
     setQuestion(Math.floor(Math.random() * newQuestionArray.length));
-
-    console.log("questionArray in end of Manche", questionArray);
-
     setTimer(30);
     setIsDone(false);
     setDisableTime(false);
@@ -399,7 +395,14 @@ const Game1: React.FC<{
     setIaTimer3(15);
     setMessage("");
     setResponse("");
-    setShuffleAnswer((a: any, b: any): any => Math.random() - 0.5);
+
+    // const newArrAnswers = [
+    //   ...questionArray[question].responses,
+    //   questionArray[question].goodAnswer,
+    // ]
+
+    // const newShufflenumber = Math.random() - 0.5;
+    // setShuffleAnswer(newShufflenumber);
 
     if (player1Points >= 9) {
       setWinnerPlayer1(true);

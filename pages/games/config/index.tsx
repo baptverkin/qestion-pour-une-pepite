@@ -77,7 +77,7 @@ const GameConfig: React.FC<{
   pseudoPlayer3,
   pseudoPlayer4,
 }) => {
-  const [difficulty, setDifficulty] = React.useState("");
+  const [difficulty, setDifficulty] = React.useState("facile");
 
   const handleButtons = (e: any) => {
     setDifficulty(e.target.value);
