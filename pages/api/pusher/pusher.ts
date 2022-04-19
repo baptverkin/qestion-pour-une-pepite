@@ -6,6 +6,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const APP_KEY = process.env.APP_KEY || "";
   const APP_SECRET = process.env.APP_SECRET || "";
   const APP_CLUSTER = process.env.APP_CLUSTER || "";
+  const pseudo = req.query.pseudo;
   const pusher = new Pusher({
     appId: APP_ID,
     key: APP_KEY,
@@ -14,8 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   pusher.trigger("tests", "test-event", {
-    name: "Hugo",
-    score: Math.random(),
+    pseudo: pseudo,
     messageType: "Join 9 points gagnants",
   });
   res.end();

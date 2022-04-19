@@ -3,38 +3,63 @@ import Pusher, { Channel } from "pusher-js";
 import React, { useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { Layout } from "../../components/layout";
+import { getSession } from "@auth0/nextjs-auth0";
+import { getDatabase } from "../../src/database";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = getSession(req, res);
+  const email = session?.user.email;
+  const mongodb = await getDatabase();
+  const response = await mongodb
+    .db()
+    .collection("users")
+    .findOne({ email: email });
+  const userDB = JSON.parse(JSON.stringify(response));
+
   const APP_KEY = process.env.APP_KEY;
   const APP_CLUSTER = process.env.APP_CLUSTER;
   return {
     props: {
       appKey: APP_KEY,
       cluster: APP_CLUSTER,
+      pseudo: userDB.pseudo,
     },
   };
 };
 
 const DisplayNames: React.FC<{ channel?: Channel }> = ({ channel }) => {
-  const [names, setNames] = React.useState("");
+  const [names, setNames] = React.useState([]);
   useEffect(() => {
     if (channel) {
-      channel.bind("test-event", (data: any) => {
-        console.log(data);
-        setNames(names + data.name);
+      channel.bind("test-event", (data: { pseudo: never }) => {
+        const temp = () => {
+          if (names.includes(data.pseudo) === false) {
+            names.push(data.pseudo);
+          }
+          return names;
+        };
+        setNames(temp);
+        console.log(names);
       });
       return () => {
         channel.unbind("test-event");
       };
     }
   }, [channel, names]);
-  return <li>{names}</li>;
+  return (
+    <div>
+      {names.map((name) => {
+        return <li key={Math.random()}>{name}</li>;
+      })}
+    </div>
+  );
 };
 
 const Tests: React.FC<{
   appKey: string;
   cluster: string;
-}> = ({ appKey, cluster }) => {
+  pseudo: string;
+}> = ({ appKey, cluster, pseudo }) => {
   const [channel, setChannel] = React.useState<Channel>();
   const [loading, setLoading] = React.useState(false);
   useEffect(() => {
@@ -48,7 +73,7 @@ const Tests: React.FC<{
 
   const handler = () => {
     setLoading(true);
-    fetch("/api/pusher/pusher").then(() => setLoading(false));
+    fetch(`/api/pusher/pusher?pseudo=${pseudo}`).then(() => setLoading(false));
   };
 
   return (
@@ -57,7 +82,7 @@ const Tests: React.FC<{
         <DisplayNames channel={channel} />
         <br />
         <Button onClick={handler} disabled={loading}>
-          Click me
+          Join party
         </Button>
       </div>
     </Layout>
