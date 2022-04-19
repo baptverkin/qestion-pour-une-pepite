@@ -112,11 +112,12 @@ const Game1: React.FC<{
   const [questionId, setQuestionId] = useState("");
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
+  const [questionArray, setQuestionArray] = useState(questionTest);
   const [question, setQuestion] = useState(
-    Math.floor(Math.random() * questionTest.length)
+    Math.floor(Math.random() * questionArray.length)
   );
   const [shuffleAnswer, setShuffleAnswer] = useState(
-    (a: any, b: any): any => 0.5 - Math.random()
+    (): any => Math.random() - 0.5
   );
   const [winnerPlayer1, setWinnerPlayer1] = useState(false);
   const [winnerPlayer2, setWinnerPlayer2] = useState(false);
@@ -126,6 +127,10 @@ const Game1: React.FC<{
   const [messageWinnerPlayer2, setMessageWinnerPlayer2] = useState("");
   const [messageWinnerPlayer3, setMessageWinnerPlayer3] = useState("");
   const [messageWinnerPlayer4, setMessageWinnerPlayer4] = useState("");
+
+  console.log("question array length", questionArray.length);
+
+  console.log("sufflesAnswer number", shuffleAnswer);
 
   const bodyData = {
     gameId: gameId,
@@ -148,15 +153,19 @@ const Game1: React.FC<{
       const timer1 = setTimeout(() => setTimer(timer - 1), 1000);
 
       const arrAnswers = [
-        ...questionTest[question].responses,
-        questionTest[question].goodAnswer,
-      ].sort(() => shuffleAnswer);
+        ...questionArray[question].responses,
+        questionArray[question].goodAnswer,
+      ];
+      console.log("ArrAnswers", arrAnswers);
 
-      console.log("arr answer", arrAnswers);
+      const shuffleArrAnswer = arrAnswers.sort(() => shuffleAnswer);
+
+      console.log("Shuffle answer", shuffleArrAnswer);
+
       setAnswers(arrAnswers);
-      setGoodAnswer(questionTest[question].goodAnswer);
-      setPoints(questionTest[question].points);
-      setQuestionId(questionTest[question]._id);
+      setGoodAnswer(questionArray[question].goodAnswer);
+      setPoints(questionArray[question].points);
+      setQuestionId(questionArray[question]._id);
 
       if (difficulty === "facile") {
         setIaTimer2(8);
@@ -373,7 +382,14 @@ const Game1: React.FC<{
   }
 
   function endOfManche(): any {
-    setQuestion(Math.floor(Math.random() * questionTest.length));
+    const newQuestionArray = questionArray.filter((e: any) => {
+      return e.question !== questionArray[question].question;
+    });
+    setQuestionArray(newQuestionArray);
+    setQuestion(Math.floor(Math.random() * newQuestionArray.length));
+
+    console.log("questionArray in end of Manche", questionArray);
+
     setTimer(30);
     setIsDone(false);
     setDisableTime(false);
@@ -383,7 +399,7 @@ const Game1: React.FC<{
     setIaTimer3(15);
     setMessage("");
     setResponse("");
-    setShuffleAnswer((a: any, b: any): any => 0.5 - Math.random());
+    setShuffleAnswer((a: any, b: any): any => Math.random() - 0.5);
 
     if (player1Points >= 9) {
       setWinnerPlayer1(true);
@@ -445,212 +461,204 @@ const Game1: React.FC<{
     }).then((result) => router.push(result.url));
   }
 
-  if (finished) {
-    return (
-      <Layout>
-        <p>Test</p>
-      </Layout>
-    );
-  } else {
-    return (
-      <Layout>
-        <div className={styles.title} style={{ marginTop: "30px" }}>
-          {" "}
-          9 points gagnants
+  return (
+    <Layout>
+      <div className={styles.title} style={{ marginTop: "30px" }}>
+        {" "}
+        9 points gagnants
+      </div>
+      {winnerPlayer1 ? (
+        <div>
+          {messageWinnerPlayer1}
+          <br></br>
+          {players.player1.pseudo}: {player1Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player2.pseudo}: {player2Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player3.pseudo}: {player3Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player4.pseudo}: {player4Points}
+          <br></br>
+          <Link href="/profile" passHref>
+            <button type="button" className="btn btn-primary">
+              Back to my Profile &rarr;
+            </button>
+          </Link>
         </div>
-        {winnerPlayer1 ? (
-          <div>
-            {messageWinnerPlayer1}
-            <br></br>
-            {players.player1.pseudo}: {player1Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player2.pseudo}: {player2Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player3.pseudo}: {player3Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player4.pseudo}: {player4Points}
-            <br></br>
-            <Link href="/profile" passHref>
-              <button type="button" className="btn btn-primary">
-                Back to my Profile &rarr;
-              </button>
-            </Link>
+      ) : winnerPlayer2 ? (
+        <div>
+          {messageWinnerPlayer2}
+          <br></br>
+          {players.player1.pseudo}: {player1Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player2.pseudo}: {player2Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player3.pseudo}: {player3Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player4.pseudo}: {player4Points}
+          <br></br>
+          <Link href="/profile" passHref>
+            <button type="button" className="btn btn-primary">
+              Back to my Profile &rarr;
+            </button>
+          </Link>
+        </div>
+      ) : winnerPlayer3 ? (
+        <div>
+          {messageWinnerPlayer3}
+          <br></br>
+          {players.player1.pseudo}: {player1Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player2.pseudo}: {player2Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player3.pseudo}: {player3Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player4.pseudo}: {player4Points}
+          <br></br>
+          <Link href="/profile" passHref>
+            <button type="button" className="btn btn-primary">
+              Back to my Profile &rarr;
+            </button>
+          </Link>
+        </div>
+      ) : winnerPlayer4 ? (
+        <div>
+          {messageWinnerPlayer4}
+          <br></br>
+          {players.player1.pseudo}: {player1Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player2.pseudo}: {player2Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player3.pseudo}: {player3Points}
+          &nbsp;&nbsp;&nbsp;
+          {players.player4.pseudo}: {player4Points}
+          <br></br>
+          <Link href="/profile" passHref>
+            <button type="button" className="btn btn-primary">
+              Back to my Profile &rarr;
+            </button>
+          </Link>
+        </div>
+      ) : (
+        <>
+          <div className={styles.description}>
+            {" "}
+            {questionArray[question].question}
           </div>
-        ) : winnerPlayer2 ? (
-          <div>
-            {messageWinnerPlayer2}
-            <br></br>
-            {players.player1.pseudo}: {player1Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player2.pseudo}: {player2Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player3.pseudo}: {player3Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player4.pseudo}: {player4Points}
-            <br></br>
-            <Link href="/profile" passHref>
-              <button type="button" className="btn btn-primary">
-                Back to my Profile &rarr;
-              </button>
-            </Link>
-          </div>
-        ) : winnerPlayer3 ? (
-          <div>
-            {messageWinnerPlayer3}
-            <br></br>
-            {players.player1.pseudo}: {player1Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player2.pseudo}: {player2Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player3.pseudo}: {player3Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player4.pseudo}: {player4Points}
-            <br></br>
-            <Link href="/profile" passHref>
-              <button type="button" className="btn btn-primary">
-                Back to my Profile &rarr;
-              </button>
-            </Link>
-          </div>
-        ) : winnerPlayer4 ? (
-          <div>
-            {messageWinnerPlayer4}
-            <br></br>
-            {players.player1.pseudo}: {player1Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player2.pseudo}: {player2Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player3.pseudo}: {player3Points}
-            &nbsp;&nbsp;&nbsp;
-            {players.player4.pseudo}: {player4Points}
-            <br></br>
-            <Link href="/profile" passHref>
-              <button type="button" className="btn btn-primary">
-                Back to my Profile &rarr;
-              </button>
-            </Link>
-          </div>
-        ) : (
-          <>
-            <div className={styles.description}>
-              {" "}
-              {questionTest[question].question}
-            </div>
-            {disableTrue ? (
-              <></>
-            ) : (
-              <div style={{ marginLeft: "20px" }}>{timer}</div>
-            )}
-            <div style={{ marginLeft: "20px" }}>{message}</div> <br></br>
-            <div className="container">
-              <div className="row">
-                <div className="column">
-                  {" "}
-                  <button
-                    className="button button2"
-                    disabled={disableTrue || disableWrong || disableTime}
-                    onClick={() => {
-                      setResponse(answers[0]);
-                      handleResponse(answers[0]);
-                    }}
-                  >
-                    {answers[0]}
-                  </button>
-                </div>
-                <div className="column">
-                  <button
-                    className="button button2"
-                    disabled={disableTrue || disableWrong || disableTime}
-                    onClick={() => {
-                      setResponse(answers[1]);
-                      handleResponse(answers[1]);
-                    }}
-                  >
-                    {answers[1]}
-                  </button>
-                </div>
-              </div>
-              <div className="row">
-                <div className="column">
-                  {" "}
-                  <button
-                    className="button button2"
-                    disabled={disableTrue || disableWrong || disableTime}
-                    onClick={() => {
-                      setResponse(answers[2]);
-                      handleResponse(answers[2]);
-                    }}
-                  >
-                    {answers[2]}
-                  </button>
-                </div>
-                <div className="column">
-                  <button
-                    className="button button2"
-                    disabled={disableTrue || disableWrong || disableTime}
-                    onClick={() => {
-                      setResponse(answers[3]);
-                      handleResponse(answers[3]);
-                    }}
-                  >
-                    {answers[3]}
-                  </button>
-                </div>
-              </div>
-              <div className="row">
-                <div className="column">
-                  {" "}
-                  <button
-                    className="button button2"
-                    disabled={disableTrue || disableWrong || disableTime}
-                    onClick={() => {
-                      setResponse(answers[4]);
-                      handleResponse(answers[4]);
-                    }}
-                  >
-                    {answers[4]}
-                  </button>
-                </div>
-                <div className="column">
-                  <button
-                    className="button button2"
-                    disabled={disableTrue || disableWrong || disableTime}
-                    onClick={() => {
-                      setResponse(answers[5]);
-                      handleResponse(answers[5]);
-                    }}
-                  >
-                    {answers[5]}
-                  </button>
-                </div>
-              </div>
-              <br></br>
-              <div>
-                {players.player1.pseudo}: {player1Points}
-                &nbsp;&nbsp;&nbsp;
-                {players.player2.pseudo}: {player2Points}
-                &nbsp;&nbsp;&nbsp;
-                {players.player3.pseudo}: {player3Points}
-                &nbsp;&nbsp;&nbsp;
-                {players.player4.pseudo}: {player4Points}
-              </div>{" "}
-              <br></br>
-              <div>
+          {disableTrue ? (
+            <></>
+          ) : (
+            <div style={{ marginLeft: "20px" }}>{timer}</div>
+          )}
+          <div style={{ marginLeft: "20px" }}>{message}</div> <br></br>
+          <div className="container">
+            <div className="row">
+              <div className="column">
+                {" "}
                 <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={endOfManche}
+                  className="button button2"
+                  disabled={disableTrue || disableWrong || disableTime}
+                  onClick={() => {
+                    setResponse(answers[0]);
+                    handleResponse(answers[0]);
+                  }}
                 >
-                  Next question &rarr;
+                  {answers[0]}
                 </button>
               </div>
-              <br></br>
+              <div className="column">
+                <button
+                  className="button button2"
+                  disabled={disableTrue || disableWrong || disableTime}
+                  onClick={() => {
+                    setResponse(answers[1]);
+                    handleResponse(answers[1]);
+                  }}
+                >
+                  {answers[1]}
+                </button>
+              </div>
             </div>
-          </>
-        )}
-      </Layout>
-    );
-  }
+            <div className="row">
+              <div className="column">
+                {" "}
+                <button
+                  className="button button2"
+                  disabled={disableTrue || disableWrong || disableTime}
+                  onClick={() => {
+                    setResponse(answers[2]);
+                    handleResponse(answers[2]);
+                  }}
+                >
+                  {answers[2]}
+                </button>
+              </div>
+              <div className="column">
+                <button
+                  className="button button2"
+                  disabled={disableTrue || disableWrong || disableTime}
+                  onClick={() => {
+                    setResponse(answers[3]);
+                    handleResponse(answers[3]);
+                  }}
+                >
+                  {answers[3]}
+                </button>
+              </div>
+            </div>
+            <div className="row">
+              <div className="column">
+                {" "}
+                <button
+                  className="button button2"
+                  disabled={disableTrue || disableWrong || disableTime}
+                  onClick={() => {
+                    setResponse(answers[4]);
+                    handleResponse(answers[4]);
+                  }}
+                >
+                  {answers[4]}
+                </button>
+              </div>
+              <div className="column">
+                <button
+                  className="button button2"
+                  disabled={disableTrue || disableWrong || disableTime}
+                  onClick={() => {
+                    setResponse(answers[5]);
+                    handleResponse(answers[5]);
+                  }}
+                >
+                  {answers[5]}
+                </button>
+              </div>
+            </div>
+            <br></br>
+            <div>
+              {players.player1.pseudo}: {player1Points}
+              &nbsp;&nbsp;&nbsp;
+              {players.player2.pseudo}: {player2Points}
+              &nbsp;&nbsp;&nbsp;
+              {players.player3.pseudo}: {player3Points}
+              &nbsp;&nbsp;&nbsp;
+              {players.player4.pseudo}: {player4Points}
+            </div>{" "}
+            <br></br>
+            <div>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={endOfManche}
+              >
+                Next question &rarr;
+              </button>
+            </div>
+            <br></br>
+          </div>
+        </>
+      )}
+    </Layout>
+  );
 };
 
 export default Game1;

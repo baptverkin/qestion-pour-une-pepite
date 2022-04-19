@@ -15,6 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
   const email = session?.user.email;
   const mongodb = await getDatabase();
+
   const response = await mongodb
     .db()
     .collection("users")
