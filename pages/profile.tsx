@@ -23,7 +23,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const userDb = JSON.parse(JSON.stringify(response));
 
   const responses = await mongodb.db().collection("users").find().toArray();
-  const usersSorted = responses.sort((a:any,b:any) => b.victories - a.victories);
+  const usersSorted = responses.sort(
+    (a: any, b: any) => b.victories - a.victories
+  );
   const usersDb = JSON.parse(JSON.stringify(usersSorted));
   return {
     props: {
@@ -32,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       victories: userDb.victories,
       playedGames: userDb.playedGames,
       email: userDb.email,
-      leaderBoard: usersDb
+      leaderBoard: usersDb,
     },
   };
 };
@@ -43,9 +45,9 @@ const Profile: React.FC<{
   victories: number;
   playedGames: number;
   email: string;
-  leaderBoard:any
-}> = ({ _id, pseudo, victories, playedGames, email, leaderBoard}) => {
-  console.log("LeaderBord =========",leaderBoard)
+  leaderBoard: any;
+}> = ({ _id, pseudo, victories, playedGames, email, leaderBoard }) => {
+  console.log("LeaderBord =========", leaderBoard);
   return (
     <>
       <Layout>
@@ -103,7 +105,7 @@ const Profile: React.FC<{
               </p>
             </Tab>
           </Tabs>
-          <Link href="/games/config" passHref={true}>
+          <Link href="/games/config/index-multi-joueurs" passHref={true}>
             <Button
               variant="primary"
               style={{
@@ -141,7 +143,7 @@ const Profile: React.FC<{
                   Rapidité ! Les 3 premiers joueurs à obtenir 9 points se
                   qualifient
                 </Card.Text>
-                <Link href="#" passHref={true}>
+                <Link href="/games/config/" passHref={true}>
                   <Button variant="primary">Commencez à jouer &rarr;</Button>
                 </Link>
               </Card.Body>
@@ -174,10 +176,13 @@ const Profile: React.FC<{
           </div>
         </div>
         <div>
-        {leaderBoard.map((element: any, index:number) => (
-          <h3 key={uuidv4()}>pseudo:{element.pseudo} + victories: {element.victories} + played Games: {element.playedGames} ranking: #{index+1}</h3>
-        ))}
-      </div>
+          {leaderBoard.map((element: any, index: number) => (
+            <h3 key={uuidv4()}>
+              pseudo:{element.pseudo} + victories: {element.victories} + played
+              Games: {element.playedGames} ranking: #{index + 1}
+            </h3>
+          ))}
+        </div>
       </Layout>
     </>
   );
