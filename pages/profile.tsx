@@ -10,6 +10,7 @@ import styles from "../styles/Home.module.css";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import { v4 as uuidv4 } from "uuid";
+import router from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
@@ -48,6 +49,27 @@ const Profile: React.FC<{
   leaderBoard: any;
 }> = ({ _id, pseudo, victories, playedGames, email, leaderBoard }) => {
   console.log("LeaderBord =========", leaderBoard);
+
+  const handleSubmit = async (e: {
+    preventDefault: () => void;
+    target: any;
+  }) => {
+    e.preventDefault();
+    const temp = {
+      _id: _id,
+      pseudo: pseudo,
+      email: email,
+    };
+
+    await fetch("/api/games/generateGameMulti", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(temp),
+    }).then((result) => router.push(result.url));
+  };
+
   return (
     <>
       <Layout>
@@ -105,19 +127,19 @@ const Profile: React.FC<{
               </p>
             </Tab>
           </Tabs>
-          <Link href="/games/config/index-multi-joueurs" passHref={true}>
-            <Button
-              variant="primary"
-              style={{
-                textAlign: "center",
-                marginLeft: "40%",
-                marginRight: "40%",
-                marginBottom: "1em",
-              }}
-            >
-              Commencez à jouer &rarr;
-            </Button>
-          </Link>
+
+          <Button
+            onClick={handleSubmit}
+            variant="primary"
+            style={{
+              textAlign: "center",
+              marginLeft: "40%",
+              marginRight: "40%",
+              marginBottom: "1em",
+            }}
+          >
+            Commencez à jouer &rarr;
+          </Button>
         </Card>
         <br></br>
 
