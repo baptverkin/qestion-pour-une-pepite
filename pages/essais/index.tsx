@@ -32,14 +32,12 @@ const DisplayNames: React.FC<{ channel?: Channel }> = ({ channel }) => {
   useEffect(() => {
     if (channel) {
       channel.bind("test-event", (data: { pseudo: never }) => {
-        const temp = () => {
-          if (names.includes(data.pseudo) === false) {
-            names.push(data.pseudo);
+        setNames((currentNames) => {
+          if (currentNames.includes(data.pseudo) === false) {
+            return [...currentNames, data.pseudo];
           }
-          return names;
-        };
-        setNames(temp);
-        console.log(names);
+          return currentNames;
+        });
       });
       return () => {
         channel.unbind("test-event");
