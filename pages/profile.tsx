@@ -174,7 +174,7 @@ const Profile: React.FC<{
         </div>
         <div>
         {leaderBoard.map((element: any, index:number) => (
-          <h3 key={uuidv4()}>pseudo :{element.pseudo} + victories: {element.victories} + played Games:  {element.playedGames} ranking : #{index+1}</h3>
+          <h3 key={uuidv4()}>pseudo:{element.pseudo} + victories: {element.victories} + played Games: {element.playedGames} ranking: #{index+1}</h3>
         ))}
       </div>
       </Layout>
