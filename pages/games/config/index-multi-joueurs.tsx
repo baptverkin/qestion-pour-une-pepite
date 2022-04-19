@@ -18,6 +18,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   const mongodb = await getDatabase();
 
+  const APP_KEY = process.env.APP_KEY;
+  const APP_CLUSTER = process.env.APP_CLUSTER;
+
   const player1 = await mongodb
     .db()
     .collection("users")
@@ -47,38 +50,76 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       _id: usersDb._id,
       email: usersDb.email,
       pseudo: usersDb.pseudo,
-      _idPlayer2: player2._id,
-      pseudoPlayer2: player2.pseudo,
-      _idPlayer3: player3._id,
-      pseudoPlayer3: player3.pseudo,
-      _idPlayer4: player4._id,
-      pseudoPlayer4: player4.pseudo,
+      appKey: APP_KEY,
+      cluster: APP_CLUSTER,
     },
   };
+};
+
+const DisplayNames: React.FC<{ channel?: Channel }> = ({ channel }) => {
+  const [names, setNames] = React.useState([]);
+  useEffect(() => {
+    if (channel) {
+      channel.bind("test-event", (data: { pseudo: never }) => {
+        setNames((currentNames) => {
+          if (currentNames.includes(data.pseudo) === false) {
+            return [...currentNames, data.pseudo];
+          }
+          return currentNames;
+        });
+      });
+      return () => {
+        channel.unbind("test-event");
+      };
+    }
+  }, [channel, names]);
+  return (
+    <div>
+      {names.map((name, index) => {
+        return (
+          <div key={Math.random()}>
+            Joueur {index + 1} : {name}
+          </div>
+        );
+      })}
+      <br></br>
+      <div>
+        {names.length === 4
+          ? ""
+          : `En attente de ${4 - names.length} joueurs...`}
+      </div>
+    </div>
+  );
 };
 
 const GameConfig: React.FC<{
   _id: ObjectId;
   pseudo: string;
   email: string;
-  _idPlayer2: ObjectId;
-  pseudoPlayer2: string;
-  _idPlayer3: ObjectId;
-  pseudoPlayer3: string;
-  _idPlayer4: ObjectId;
-  pseudoPlayer4: string;
-}> = ({
-  _id,
-  pseudo,
-  email,
-  _idPlayer2,
-  _idPlayer3,
-  _idPlayer4,
-  pseudoPlayer2,
-  pseudoPlayer3,
-  pseudoPlayer4,
-}) => {
+  appKey: string;
+  cluster: string;
+}> = ({ _id, pseudo, email, appKey, cluster }) => {
+  const [channel, setChannel] = React.useState<Channel>();
+  const [loading, setLoading] = React.useState(false);
   const [difficulty, setDifficulty] = React.useState("facile");
+
+  console.log("id index", _id);
+
+  useEffect(() => {
+    const pusher = new Pusher(`${appKey}`, {
+      cluster: `${cluster}`,
+    });
+
+    const channel = pusher.subscribe("tests");
+    setChannel(channel);
+  }, [cluster, appKey]);
+
+  const handler = () => {
+    setLoading(true);
+    fetch(`/api/pusher/pusher?pseudo=${pseudo}&id=${_id}`).then(() =>
+      setLoading(false)
+    );
+  };
 
   const handleButtons = (e: any) => {
     setDifficulty(e.target.value);
@@ -93,16 +134,9 @@ const GameConfig: React.FC<{
       _id: _id,
       pseudo: pseudo,
       email: email,
-      difficulty: difficulty,
-      _idPlayer2: _idPlayer2,
-      pseudoPlayer2: pseudoPlayer2,
-      _idPlayer3: _idPlayer3,
-      pseudoPlayer3: pseudoPlayer3,
-      _idPlayer4: _idPlayer4,
-      pseudoPlayer4: pseudoPlayer4,
     };
 
-    await fetch("/api/games/generateGame", {
+    await fetch("/api/games/generateGameMulti", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,27 +149,13 @@ const GameConfig: React.FC<{
     <Layout>
       <div className="container">
         <h3>Configurer la partie :</h3>
-        <label>Joueur 1 : </label> {pseudo}
         <br />
-        <label>Joueur 2 : </label> {pseudoPlayer2}
+        <DisplayNames channel={channel} />
         <br />
-        <label>Joueur 3 : </label> {pseudoPlayer3}
+        <Button onClick={handler} disabled={loading}>
+          Join party
+        </Button>
         <br />
-        <label>Joueur 4 : </label> {pseudoPlayer4}
-        <h4>Choix de la difficulté : {difficulty} </h4>
-        <ButtonGroup aria-label="Basic example">
-          <Button variant="secondary" value="facile" onClick={handleButtons}>
-            Facile
-          </Button>
-          <br />
-          <Button variant="secondary" value="moyen" onClick={handleButtons}>
-            Moyen
-          </Button>
-          <br />
-          <Button variant="secondary" value="difficile" onClick={handleButtons}>
-            Difficile
-          </Button>
-        </ButtonGroup>
         <br />
         <br />
         <br />
