@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/link"
 import styles from "../styles/Home.module.css";
 import Head from "next/head";
 import { ReactNode } from "react";
@@ -26,22 +27,23 @@ export const Layout: React.FC<{ children: any }> = ({
                   Question pour une pépite 🌟
                 </a>
               </Link>
-
               <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"></ul>
-
               <div className="text-end">
+                <Link href="/profile">
+                  <img className="img-samuel"src="https://i.ibb.co/WKqqS6S/image-9-removebg-preview.png" alt="Samuel"  width="40" height="50"/>
+                </Link>
                 {user ? (
                   <Link href="/api/auth/logout" passHref={true}>
-                      <button type="button" className="btn btn-warning">
-                        <a>Logout</a>
-                      </button>
-                    </Link>
+                    <button type="button" className="btn btn-warning">
+                      <a>Logout</a>
+                    </button>
+                  </Link>
                 ) : (
-                    <Link href="/api/auth/login" passHref={true}>
-                      <button type="button" className="btn btn-warning">
-                          <a>Login</a>
-                      </button>
-                    </Link>
+                  <Link href="/api/auth/login" passHref={true}>
+                    <button type="button" className="btn btn-warning">
+                      <a>Login</a>
+                    </button>
+                  </Link>
                 )}
               </div>
             </div>

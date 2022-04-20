@@ -108,6 +108,11 @@
   margin-left: 0.5rem;
 }
 
+.img-samuel{
+  max-height: 50px;
+  max-width: 30px;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
