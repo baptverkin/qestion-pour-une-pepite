@@ -17,10 +17,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   const session = getSession(req, res);
   const email = session?.user.email;
   const gameId = query.game_id;
-  console.log("query", query);
-  console.log("gameid", gameId);
-
-  // const gameId = JSON.parse(JSON.stringify(findGameId));
 
   const mongodb = await getDatabase();
 
@@ -29,16 +25,16 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const player1 = await mongodb
     .db()
-    .collection("users")
-    .findOne({ email: email });
-  const usersDb = JSON.parse(JSON.stringify(player1));
+    .collection("current-games")
+    .findOne({ _id: new ObjectId(gameId?.toString()) });
+  const currentGame = JSON.parse(JSON.stringify(player1));
 
   return {
     props: {
-      _id: usersDb._id,
-      email: usersDb.email,
+      _id: currentGame.players.player1._id,
+      email: email,
       gameId: gameId,
-      pseudo: usersDb.pseudo,
+      pseudo: currentGame.players.player1.pseudo,
       appKey: APP_KEY,
       cluster: APP_CLUSTER,
     },
@@ -51,6 +47,7 @@ const DisplayNames: React.FC<{
   gameId: ObjectId;
 }> = ({ channel, pseudo, gameId }) => {
   const [names, setNames] = React.useState([pseudo]);
+  console.log("names ligne 54", names);
   useEffect(() => {
     if (channel) {
       channel.bind("test-event", (data: { pseudo: never }) => {
@@ -60,6 +57,7 @@ const DisplayNames: React.FC<{
           }
           return currentNames;
         });
+        console.log("names ligne 64", names);
       });
       return () => {
         channel.unbind("test-event");
@@ -95,8 +93,6 @@ const GameConfig: React.FC<{
 }> = ({ _id, pseudo, email, appKey, cluster, gameId }) => {
   const [channel, setChannel] = React.useState<Channel>();
   const [loading, setLoading] = React.useState(false);
-
-  console.log("id index", _id);
 
   useEffect(() => {
     const pusher = new Pusher(`${appKey}`, {

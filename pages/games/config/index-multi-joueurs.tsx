@@ -12,44 +12,21 @@ import { getDatabase } from "../../../src/database";
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = getSession(req, res);
   const email = session?.user.email;
-  const emailPlayer2 = "iabotmartin@fewlines.com";
-  const emailPlayer3 = "iajehane@fewlines.com";
-  const emailPlayer4 = "iafenn@fewlines.com";
-
-  const mongodb = await getDatabase();
-
   const APP_KEY = process.env.APP_KEY;
   const APP_CLUSTER = process.env.APP_CLUSTER;
 
+  const mongodb = await getDatabase();
   const player1 = await mongodb
     .db()
-    .collection("users")
+    .collection("current-games")
     .findOne({ email: email });
-  const usersDb = JSON.parse(JSON.stringify(player1));
-
-  const userPlayer2 = await mongodb
-    .db()
-    .collection("users")
-    .findOne({ email: emailPlayer2 });
-  const player2 = JSON.parse(JSON.stringify(userPlayer2));
-
-  const userPlayer3 = await mongodb
-    .db()
-    .collection("users")
-    .findOne({ email: emailPlayer3 });
-  const player3 = JSON.parse(JSON.stringify(userPlayer3));
-
-  const userPlayer4 = await mongodb
-    .db()
-    .collection("users")
-    .findOne({ email: emailPlayer4 });
-  const player4 = JSON.parse(JSON.stringify(userPlayer4));
+  const currentGame = JSON.parse(JSON.stringify(player1));
 
   return {
     props: {
-      _id: usersDb._id,
-      email: usersDb.email,
-      pseudo: usersDb.pseudo,
+      _id: currentGame.players.player1._id,
+      email: email,
+      pseudo: currentGame.players.player1.pseudo,
       appKey: APP_KEY,
       cluster: APP_CLUSTER,
     },
@@ -58,6 +35,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
 const DisplayNames: React.FC<{ channel?: Channel }> = ({ channel }) => {
   const [names, setNames] = React.useState([]);
+  // console.log("names ligne 38", names);
   useEffect(() => {
     if (channel) {
       channel.bind("test-event", (data: { pseudo: never }) => {
@@ -67,6 +45,7 @@ const DisplayNames: React.FC<{ channel?: Channel }> = ({ channel }) => {
           }
           return currentNames;
         });
+        // console.log("names ligne 48", names);
       });
       return () => {
         channel.unbind("test-event");

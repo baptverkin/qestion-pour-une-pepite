@@ -48,8 +48,6 @@ const Profile: React.FC<{
   email: string;
   leaderBoard: any;
 }> = ({ _id, pseudo, victories, playedGames, email, leaderBoard }) => {
-  console.log("LeaderBord =========", leaderBoard);
-
   const handleSubmit = async (e: {
     preventDefault: () => void;
     target: any;
@@ -141,17 +139,17 @@ const Profile: React.FC<{
               Jouer contre des IA &rarr;
             </Button>
           </Link>
-            <Button
-              onClick={handleSubmit}
-              style={{
-                textAlign: "center",
-                marginLeft: "40%",
-                marginRight: "40%",
-                marginBottom: "1em",
-              }}
-            >
-              Jouer en multijoueur &rarr;
-            </Button>
+          <Button
+            onClick={handleSubmit}
+            style={{
+              textAlign: "center",
+              marginLeft: "40%",
+              marginRight: "40%",
+              marginBottom: "1em",
+            }}
+          >
+            Jouer en multijoueur &rarr;
+          </Button>
         </Card>
         <br></br>
 

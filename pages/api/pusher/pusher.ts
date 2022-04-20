@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = req.query.id;
   const gameId = req.query.gameId;
 
-  console.log("id", _id);
+  // console.log("id", _id);
   const pusher = new Pusher({
     appId: APP_ID,
     key: APP_KEY,
@@ -46,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         }
       );
-  }else if (findGame?.players.player3._id === "") {
+  } else if (findGame?.players.player3._id === "") {
     const updateGame = await mongodb
       .db()
       .collection("current-games")
@@ -64,7 +64,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         }
       );
-  }else if (findGame?.players.player4._id === "") {
+  } else if (findGame?.players.player4._id === "") {
     const updateGame = await mongodb
       .db()
       .collection("current-games")

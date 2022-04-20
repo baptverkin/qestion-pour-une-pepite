@@ -153,12 +153,6 @@ const Game1: React.FC<{
         questionArray[question].goodAnswer,
       ];
 
-      // const shuffleArrAnswer = arrAnswers.sort(() => shuffleAnswer);
-
-      // setAnswers(shuffleArrAnswer);
-      console.log("ArrAnswers", arrAnswers);
-      console.log("Shuffle answer", answers);
-
       if (timer === maxTimer) {
         setAnswers(arrAnswers.sort(() => Math.random() - 0.5));
       }
@@ -418,7 +412,7 @@ const Game1: React.FC<{
       });
     } else if (player2Points >= 9) {
       setWinnerPlayer2(true);
-      console.log(winnerPlayer2);
+      // console.log(winnerPlayer2);
       setMessageWinnerPlayer2(
         `Congrats ${players.player2.pseudo}, you won the game `
       );
