@@ -65,4 +65,8 @@ a {
 
 }
 
+.Background{
+  background : linear-gradient(blue,rgb(129, 178, 212)) ;
+}
+
 
