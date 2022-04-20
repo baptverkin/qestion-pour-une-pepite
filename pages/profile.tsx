@@ -85,21 +85,21 @@ const Profile: React.FC<{
         >
           <Tabs defaultActiveKey="first">
             <Tab eventKey="first" title="Multi-joueur" className="container">
-              <h5 style={{ marginTop: "1em" }}>Multi-joueur : </h5>
-              <p style={{ marginBottom: "1em" }}>
+              <p style={{ marginBottom: "1em", marginTop: "1em" }}>
+                <strong>Multi-joueur : </strong>
                 Défie tes amis dans une partie multijoueur et devient le
                 champion du 9 points gagnants
               </p>
             </Tab>
             <Tab eventKey="second" title="Entrainement" className="container">
-              <h5 style={{ marginTop: "1em" }}>Règles du jeu : </h5>
-              <p style={{ marginBottom: "1em" }}>
+              <p style={{ marginBottom: "1em", marginTop: "1em" }}>
+                <strong>Entrainement : </strong>
                 Défie des IAs et devient le champion du 9 points gagnants
               </p>
             </Tab>
             <Tab eventKey="third" title="Règles" className="container">
-              <h5 style={{ marginTop: "1em" }}>Règles du jeu : </h5>
-              <p style={{ marginBottom: "1em" }}>
+              <p style={{ marginBottom: "1em", marginTop: "1em" }}>
+                <strong>Règles du jeu : </strong>
                 Quatre candidats sont en lice et doivent répondre à des
                 questions de culture générale. Le gagnant est le premier
                 candidat qui arrive à 9 points
