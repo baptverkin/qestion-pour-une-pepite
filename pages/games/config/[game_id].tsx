@@ -23,18 +23,27 @@ export const getServerSideProps: GetServerSideProps = async ({
   const APP_KEY = process.env.APP_KEY;
   const APP_CLUSTER = process.env.APP_CLUSTER;
 
-  const player1 = await mongodb
+  const findCurrentGame = await mongodb
     .db()
     .collection("current-games")
     .findOne({ _id: new ObjectId(gameId?.toString()) });
-  const currentGame = JSON.parse(JSON.stringify(player1));
+  const currentGame = JSON.parse(JSON.stringify(findCurrentGame));
+
+  const findUser = await mongodb
+    .db()
+    .collection("users")
+    .findOne({ email: email });
+  const userDb = JSON.parse(JSON.stringify(findUser));
 
   return {
     props: {
-      _id: currentGame.players.player1._id,
+      userDb: userDb,
+      pseudo: userDb.pseudo,
+      _id: userDb._id,
+      _idPlayer1: currentGame.players.player1._id,
+      pseudoPlayer1: currentGame.players.player1.pseudo,
       email: email,
       gameId: gameId,
-      pseudo: currentGame.players.player1.pseudo,
       appKey: APP_KEY,
       cluster: APP_CLUSTER,
     },
@@ -43,11 +52,15 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 const DisplayNames: React.FC<{
   channel?: Channel;
-  pseudo: string;
+  pseudoPlayer1: string;
   gameId: ObjectId;
-}> = ({ channel, pseudo, gameId }) => {
-  const [names, setNames] = React.useState([pseudo]);
+  userDb: any;
+  pseudo: string;
+}> = ({ channel, pseudoPlayer1, userDb, gameId, pseudo }) => {
+  const [names, setNames] = React.useState([pseudoPlayer1]);
+
   console.log("names ligne 54", names);
+
   useEffect(() => {
     if (channel) {
       channel.bind("test-event", (data: { pseudo: never }) => {
@@ -64,6 +77,7 @@ const DisplayNames: React.FC<{
       };
     }
   }, [channel, names]);
+
   return (
     <div>
       {names.map((name, index) => {
@@ -90,7 +104,18 @@ const GameConfig: React.FC<{
   appKey: string;
   cluster: string;
   gameId: ObjectId;
-}> = ({ _id, pseudo, email, appKey, cluster, gameId }) => {
+  pseudoPlayer1: string;
+  userDb: any;
+}> = ({
+  _id,
+  pseudo,
+  email,
+  appKey,
+  cluster,
+  gameId,
+  pseudoPlayer1,
+  userDb,
+}) => {
   const [channel, setChannel] = React.useState<Channel>();
   const [loading, setLoading] = React.useState(false);
 
@@ -135,7 +160,13 @@ const GameConfig: React.FC<{
       <div className="container">
         <h3>Configurer la partie :</h3>
         <br />
-        <DisplayNames channel={channel} pseudo={pseudo} gameId={gameId} />
+        <DisplayNames
+          channel={channel}
+          pseudo={pseudo}
+          gameId={gameId}
+          pseudoPlayer1={pseudoPlayer1}
+          userDb={userDb}
+        />
         <br />
         <Button onClick={handler} disabled={loading}>
           Join party
