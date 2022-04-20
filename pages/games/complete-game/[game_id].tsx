@@ -471,7 +471,7 @@ const Game1: React.FC<{
         9 points gagnants
       </div>
       {winnerPlayer1 ? (
-        <div>
+        <div className="container">
           {messageWinnerPlayer1}
           <br></br>
           {players.player1.pseudo}: {player1Points}
@@ -489,7 +489,7 @@ const Game1: React.FC<{
           </Link>
         </div>
       ) : winnerPlayer2 ? (
-        <div>
+        <div className="container">
           {messageWinnerPlayer2}
           <br></br>
           {players.player1.pseudo}: {player1Points}
@@ -507,7 +507,7 @@ const Game1: React.FC<{
           </Link>
         </div>
       ) : winnerPlayer3 ? (
-        <div>
+        <div className="container">
           {messageWinnerPlayer3}
           <br></br>
           {players.player1.pseudo}: {player1Points}
@@ -525,7 +525,7 @@ const Game1: React.FC<{
           </Link>
         </div>
       ) : winnerPlayer4 ? (
-        <div>
+        <div className="container">
           {messageWinnerPlayer4}
           <br></br>
           {players.player1.pseudo}: {player1Points}

@@ -73,7 +73,6 @@ const Profile: React.FC<{
   return (
     <>
       <Layout>
-        {/* {router.reload()} */}
         <div className="container">
           <h2>
             Bonjour {pseudo}&nbsp;&nbsp;&nbsp;
@@ -107,102 +106,66 @@ const Profile: React.FC<{
           }}
         >
           <Tabs defaultActiveKey="first">
-            <Tab eventKey="first" title="Général" className="container">
-              <h5 style={{ marginTop: "1em" }}>Jeu Complet : </h5>
-              <p style={{ marginBottom: "1em" }}>
-                Défie tes amis ou l&apos;IA dans une partie en 3 manches et
-                devient le champion <br></br>9 points gagnants &rarr; 4 à la
-                suite &rarr; Face à face
+            <Tab eventKey="first" title="Multi-joueur" className="container">
+              <p style={{ marginBottom: "1em", marginTop: "1em" }}>
+                <strong>Multi-joueur : </strong>
+                Défie tes amis dans une partie multijoueur et devient le
+                champion du 9 points gagnants
               </p>
             </Tab>
-            <Tab eventKey="second" title="Règles" className="container">
-              <h5 style={{ marginTop: "1em" }}>Règles du jeu : </h5>
-              <p style={{ marginBottom: "1em" }}>
-                Quatre candidats sont en lice et doivent, lors de 3 manches
-                successives, répondre à des questions de culture générale. Le
-                concurrent le moins performant est éliminé à la fin de chaque
-                manche et le gagnant est le candidat remportant la dernière
-                manche, ce qui lui donne le droit de rejouer à l&apos;émission
-                suivante.
+            <Tab eventKey="second" title="Entrainement" className="container">
+              <p style={{ marginBottom: "1em", marginTop: "1em" }}>
+                <strong>Entrainement : </strong>
+                Défie des IAs et devient le champion du 9 points gagnants
+              </p>
+            </Tab>
+            <Tab eventKey="third" title="Règles" className="container">
+              <p style={{ marginBottom: "1em", marginTop: "1em" }}>
+                <strong>Règles du jeu : </strong>
+                Quatre candidats sont en lice et doivent répondre à des
+                questions de culture générale. Le gagnant est le premier
+                candidat qui arrive à 9 points
               </p>
             </Tab>
           </Tabs>
-
-          <Button
-            onClick={handleSubmit}
-            variant="primary"
-            style={{
-              textAlign: "center",
-              marginLeft: "40%",
-              marginRight: "40%",
-              marginBottom: "1em",
-            }}
-          >
-            Commencez à jouer &rarr;
-          </Button>
+          <Link href="/games/config" passHref={true}>
+            <Button
+              variant="primary"
+              style={{
+                textAlign: "center",
+                marginLeft: "40%",
+                marginRight: "40%",
+                marginBottom: "1em",
+              }}
+            >
+              Jouer contre des IA &rarr;
+            </Button>
+          </Link>
+            <Button
+              onClick={handleSubmit}
+              style={{
+                textAlign: "center",
+                marginLeft: "40%",
+                marginRight: "40%",
+                marginBottom: "1em",
+              }}
+            >
+              Jouer en multijoueur &rarr;
+            </Button>
         </Card>
         <br></br>
 
-        <h3 className={styles.title}>Entrainement</h3>
-        <br></br>
-
-        <div className="column">
-          <div
-            className="row"
-            style={{
-              textAlign: "center",
-              marginLeft: "100px",
-              marginRight: "100px",
-              justifyContent: "center",
-              marginBottom: "1em",
-            }}
-          >
-            <Card style={{ width: "18rem" }}>
-              <Card.Img variant="top" src="/images/neuf-points-gagnants.jpeg" />
-              <Card.Body>
-                <Card.Title>9 Points gagnants</Card.Title>
-                <Card.Text>
-                  Rapidité ! Les 3 premiers joueurs à obtenir 9 points se
-                  qualifient
-                </Card.Text>
-                <Link href="/games/config/" passHref={true}>
-                  <Button variant="primary">Commencez à jouer &rarr;</Button>
-                </Link>
-              </Card.Body>
-            </Card>
-
-            <Card style={{ width: "18rem" }}>
-              <Card.Img variant="top" src="/images/quatreàlasuite.jpg" />
-              <Card.Body>
-                <Card.Title>4 à la suite </Card.Title>
-                <Card.Text>
-                  Celui qui répond aux plus de questions successivement se
-                  qualifie
-                </Card.Text>
-                <Link href="#" passHref={true}>
-                  <Button variant="primary">Commencez à jouer &rarr;</Button>
-                </Link>
-              </Card.Body>
-            </Card>
-
-            <Card style={{ width: "18rem" }}>
-              <Card.Img variant="top" src="/images/faceàface.jpg" />
-              <Card.Body>
-                <Card.Title>Face à face</Card.Title>
-                <Card.Text>Le premier à 12 points remporte la partie</Card.Text>
-                <Link href="#" passHref={true}>
-                  <Button variant="primary">Commencez à jouer &rarr;</Button>
-                </Link>
-              </Card.Body>
-            </Card>
-          </div>
-        </div>
-        <div>
+        <h3 className={styles.title}>Leaderboard :</h3>
+        <br />
+        <div className="container">
           {leaderBoard.map((element: any, index: number) => (
-            <h3 key={uuidv4()}>
-              pseudo:{element.pseudo} + victories: {element.victories} + played
-              Games: {element.playedGames} ranking: #{index + 1}
-            </h3>
+            <div className="leaderboard" key={uuidv4()}>
+              <p>
+                #{index + 1}: <u>{element.pseudo}</u>,{" "}
+                <u>{element.playedGames}</u> parties jouées,{" "}
+                <u>{element.victories}</u> parties gagnées
+              </p>
+            </div>
           ))}
         </div>
       </Layout>

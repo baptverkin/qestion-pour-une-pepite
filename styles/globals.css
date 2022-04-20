@@ -61,10 +61,12 @@ a {
 .button2:disabled {
   color: rgb(239, 230, 230);
   border: 2px solid rgb(239, 230, 230);
-
-
 }
 
+.leaderboard {
+  padding: auto;
+  margin: auto;
+}
 .Background{
   background : linear-gradient(blue,rgb(129, 178, 212)) ;
 }
@@ -74,3 +76,6 @@ a {
 }
 
 
+.leaderboard>p {
+  font-size: 22px;
+}
