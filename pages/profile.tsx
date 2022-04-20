@@ -68,7 +68,7 @@ const Profile: React.FC<{
       body: JSON.stringify(temp),
     }).then((result) => router.push(result.url));
   };
-
+  const index = leaderBoard.map((element: any) => element._id).indexOf(_id);
   return (
     <>
       <Layout>
@@ -85,11 +85,10 @@ const Profile: React.FC<{
               />
             </Link>
           </h2>
-
           <ul>
             <h4>{playedGames} parties</h4>
             <h4>{victories} victoires</h4>
-            <h4>Classement général : {leaderBoard.indexOf({"_id": _id, "pseudo": pseudo, "victories": victories,"playedGames": playedGames,"email": email })+1} </h4>
+            <h4>Classement général : {index + 1} </h4>
           </ul>
         </div>
         <br />
