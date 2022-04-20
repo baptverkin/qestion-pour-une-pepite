@@ -49,10 +49,6 @@ const Profile: React.FC<{
   email: string;
   leaderBoard: any;
 }> = ({ _id, pseudo, victories, playedGames, email, leaderBoard }) => {
-<<<<<<< HEAD
-=======
-
->>>>>>> 05090cf (add css to the leaderboard)
   const handleSubmit = async (e: {
     preventDefault: () => void;
     target: any;
@@ -158,20 +154,6 @@ const Profile: React.FC<{
         </Card>
         <br></br>
 
-<<<<<<< HEAD
-        <h3 className={styles.title}>Leaderboard :</h3>
-        <br />
-        <div className="container">
-          {leaderBoard.map((element: any, index: number) => (
-            <div className="leaderboard" key={uuidv4()}>
-              <p>
-                #{index + 1}: <u>{element.pseudo}</u>,{" "}
-                <u>{element.playedGames}</u> parties jouées,{" "}
-                <u>{element.victories}</u> parties gagnées
-              </p>
-            </div>
-          ))}
-=======
         <h3 className={styles.title}>Entrainement</h3>
         <br></br>
 
@@ -247,7 +229,6 @@ const Profile: React.FC<{
                 ))}
             </tbody>
           </table>
->>>>>>> 05090cf (add css to the leaderboard)
         </div>
       </Layout>
     </>
