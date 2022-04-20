@@ -33,26 +33,26 @@ const Home: React.FC<{ userDB: any; session: any }> = ({ userDB, session }) => {
           <h3 className={styles.title}>
 <Image src={"/images/logo_qpup_transparent.png"} alt= "logo" width="600px" height="350px" ></Image>
           </h3>
-          <p style={{color:"white"}}>
+          <p >
             {userDB ? `Joueur actuellement connecté : ${userDB.pseudo}` : ""}
           </p>
           <br />
           <br />
           {session === null ? (
             <Link href="/api/auth/login" passHref>
-              <button type="button" className="btn btn-warning">
+              <button type="button" className="btn btn-warning" style={{ color: "white", fontSize:20}}>
                 Commencer une partie &rarr;
               </button>
             </Link>
           ) : userDB === null || userDB === undefined ? (
             <Link href="/form" passHref>
-              <button type="button" className="btn btn-warning">
+              <button type="button" className="btn btn-warning" style={{ color: "white", fontSize:20}}>
                 Commencer une partie &rarr;
               </button>
             </Link>
           ) : (
             <Link href="/profile" passHref>
-              <button type="button" className="btn btn-warning">
+              <button type="button" className="btn btn-warning" style={{ color: "white", fontSize:20}}>
                 Commencer une partie &rarr;
               </button>
             </Link>

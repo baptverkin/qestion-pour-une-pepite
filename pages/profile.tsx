@@ -95,12 +95,15 @@ const Profile: React.FC<{
 
         <h3 className={styles.title}>Choisis ton mode de jeu</h3>
         <br></br>
+        <br></br>
+        <br></br>
         <Card
           className="cardProfile"
           style={{
             // textAlign: "center",
             marginLeft: "100px",
             marginRight: "100px",
+            backgroundColor: "purple"
           }}
         >
           <Tabs defaultActiveKey="first">
@@ -128,93 +131,47 @@ const Profile: React.FC<{
           </Tabs>
           <Link href="/games/config" passHref={true}>
             <Button
-              variant="primary"
+            variant = "warning"
               style={{
                 textAlign: "center",
                 marginLeft: "40%",
                 marginRight: "40%",
                 marginBottom: "1em",
+                color:"white"
               }}
             >
               Jouer contre des IA &rarr;
             </Button>
           </Link>
-          <Button
-            onClick={handleSubmit}
-            style={{
-              textAlign: "center",
-              marginLeft: "40%",
-              marginRight: "40%",
-              marginBottom: "1em",
-            }}
-          >
-            Jouer en multijoueur &rarr;
-          </Button>
+            <Button
+              onClick={handleSubmit}
+              variant = "warning"
+              style={{
+                textAlign: "center",
+                marginLeft: "40%",
+                marginRight: "40%",
+                marginBottom: "1em",
+                color:"white"
+              }}
+            >
+              Jouer en multijoueur &rarr;
+            </Button>
         </Card>
         <br></br>
-
-        <h3 className={styles.title}>Entrainement</h3>
+        <br></br>
+        <br></br>
         <br></br>
 
-        <div className="column">
-          <div
-            className="row"
-            style={{
-              textAlign: "center",
-              marginLeft: "100px",
-              marginRight: "100px",
-              justifyContent: "center",
-              marginBottom: "1em",
-            }}
-          >
-            <Card style={{ width: "18rem" }}>
-              <Card.Img variant="top" src="/images/neuf-points-gagnants.jpeg" />
-              <Card.Body>
-                <Card.Title>9 Points gagnants</Card.Title>
-                <Card.Text>
-                  Rapidité ! Les 3 premiers joueurs à obtenir 9 points se
-                  qualifient
-                </Card.Text>
-                <Link href="/games/config/" passHref={true}>
-                  <Button variant="primary">Commencez à jouer &rarr;</Button>
-                </Link>
-              </Card.Body>
-            </Card>
 
-            <Card style={{ width: "18rem" }}>
-              <Card.Img variant="top" src="/images/quatreàlasuite.jpg" />
-              <Card.Body>
-                <Card.Title>4 à la suite </Card.Title>
-                <Card.Text>
-                  Celui qui répond aux plus de questions successivement se
-                  qualifie
-                </Card.Text>
-                <Link href="#" passHref={true}>
-                  <Button variant="primary">Commencez à jouer &rarr;</Button>
-                </Link>
-              </Card.Body>
-            </Card>
 
-            <Card style={{ width: "18rem" }}>
-              <Card.Img variant="top" src="/images/faceàface.jpg" />
-              <Card.Body>
-                <Card.Title>Face à face</Card.Title>
-                <Card.Text>Le premier à 12 points remporte la partie</Card.Text>
-                <Link href="#" passHref={true}>
-                  <Button variant="primary">Commencez à jouer &rarr;</Button>
-                </Link>
-              </Card.Body>
-            </Card>
-          </div>
-        </div>
         <div>
-          <table className="table">
+          <table className="table" style={{color:"white"}}>
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">pseudo</th>
-                <th scope="col">playedGames</th>
-                <th scope="col">victories</th>
+                <th scope="col" style={{fontSize:"25px"}}>#</th>
+                <th scope="col" style={{fontSize:"25px"}}>Pseudo</th>
+                <th scope="col" style={{fontSize:"25px"}}>PlayedGames</th>
+                <th scope="col" style={{fontSize:"25px"}}>Victories</th>
               </tr>
             </thead>
             <tbody>
