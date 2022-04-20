@@ -171,7 +171,15 @@ const Game1: React.FC<{
           "answerCorrectly",
           (data: { clickedResponse: never; pseudo: never }) => {
             setDisableTrue(true);
-            setPlayer1Points(players.player1.score9PtsGagnant + points);
+            if (data.pseudo === players.player1.pseudo) {
+              setPlayer1Points(players.player1.score9PtsGagnant + points);
+            } else if (data.pseudo === players.player2.pseudo) {
+              setPlayer2Points(players.player2.score9PtsGagnant + points);
+            } else if (data.pseudo === players.player3.pseudo) {
+              setPlayer3Points(players.player3.score9PtsGagnant + points);
+            } else if (data.pseudo === players.player4.pseudo) {
+              setPlayer4Points(players.player4.score9PtsGagnant + points);
+            }
             showResult(true, data.pseudo, data.clickedResponse, points);
           }
         );
@@ -353,12 +361,16 @@ const Game1: React.FC<{
     }
   }
 
-  function endOfManche(): any {
+  function endOfManche(questionNumber = null): any {
     const newQuestionArray = questionArray.filter((e: any) => {
       return e.question !== questionArray[question].question;
     });
     setQuestionArray(newQuestionArray);
-    setQuestion(Math.floor(Math.random() * newQuestionArray.length));
+    if (questionNumber === null) {
+      setQuestion(Math.floor(Math.random() * newQuestionArray.length));
+    } else {
+      setQuestion(questionNumber);
+    }
     setTimer(30);
     setIsDone(false);
     setDisableTime(false);
@@ -615,7 +627,7 @@ const Game1: React.FC<{
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={endOfManche}
+                onClick={() => endOfManche()}
               >
                 Next question &rarr;
               </button>
