@@ -59,8 +59,6 @@ const DisplayNames: React.FC<{
 }> = ({ channel, pseudoPlayer1, userDb, gameId, pseudo }) => {
   const [names, setNames] = React.useState([pseudoPlayer1]);
 
-  console.log("names ligne 54", names);
-
   useEffect(() => {
     if (channel) {
       channel.bind("test-event", (data: { pseudo: never }) => {
@@ -70,7 +68,6 @@ const DisplayNames: React.FC<{
           }
           return currentNames;
         });
-        console.log("names ligne 64", names);
       });
       return () => {
         channel.unbind("test-event");
@@ -126,6 +123,17 @@ const GameConfig: React.FC<{
 
     const channel = pusher.subscribe("tests");
     setChannel(channel);
+
+    if (channel) {
+      channel.bind("partyLaunch", () => {
+        console.log("channel", channel);
+
+        router.push(`/games/complete-game/multi/${gameId}`);
+      });
+      return () => {
+        channel.unbind("partyLaunch");
+      };
+    }
   }, [cluster, appKey]);
 
   const handler = () => {
@@ -135,25 +143,14 @@ const GameConfig: React.FC<{
     ).then(() => setLoading(false));
   };
 
-  // const handleSubmit = async (e: {
-  //   preventDefault: () => void;
-  //   target: any;
-  // }) => {
-  //   e.preventDefault();
-  //   const temp = {
-  //     _id: _id,
-  //     pseudo: pseudo,
-  //     email: email,
-  //   };
-
-  // await fetch("/api/games/generateGameMulti", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(temp),
-  // }).then((result) => router.push(result.url));
-  // };
+  const handleEvent = () => {
+    setLoading(true);
+    console.log("handleEvent");
+    const number = Math.floor(Math.random() * 10);
+    fetch(
+      `/api/pusher/pusherPartyLaunch?pseudo=${pseudo}&id=${_id}&gameId=${gameId}&number=${number}`
+    ).then(() => setLoading(false));
+  };
 
   return (
     <Layout>
@@ -176,9 +173,7 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
-        <Link href={`/games/complete-game/multi/${gameId}`} passHref>
-          <Button>Lancer la partie &rarr;</Button>
-        </Link>
+        <Button onClick={handleEvent}>Lancer la partie &rarr;</Button>
       </div>
     </Layout>
   );

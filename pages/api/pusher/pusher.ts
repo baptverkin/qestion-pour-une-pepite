@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .db()
     .collection("current-games")
     .findOne({ _id: new ObjectId(gameId.toString()) });
-  console.log("findGale", findGame);
+
 
   if (findGame?.players.player2._id === "") {
     const updateGame = await mongodb
