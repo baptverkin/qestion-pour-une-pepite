@@ -149,7 +149,7 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
-        <Link href={`/games/complete-game/${gameId}`} passHref>
+        <Link href={`/games/complete-game/multi/${gameId}`} passHref>
           <Button>Lancer la partie &rarr;</Button>
         </Link>
       </div>
