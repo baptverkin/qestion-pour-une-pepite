@@ -122,13 +122,21 @@ const GameConfig: React.FC<{
     });
 
     const channel = pusher.subscribe("tests");
-    setChannel(channel);
+    // setChannel(myChannel);
+
+    console.log("coucou on est dans le useEffect");
+    // console.log("myChannel avant le if", myChannel);
+    console.log("channel avant le if", channel);
 
     if (channel) {
-      channel.bind("partyLaunch", () => {
-        console.log("channel", channel);
+      channel.bind("partyLaunch", (data: { questionNumber: never }) => {
+        console.log("channel dans le if", channel);
+        console.log("data", data);
+        console.log("QuestionNumber", data.questionNumber);
 
-        router.push(`/games/complete-game/multi/${gameId}`);
+        router.push(
+          `/games/complete-game/multi/${gameId}?num=${data.questionNumber}`
+        );
       });
       return () => {
         channel.unbind("partyLaunch");

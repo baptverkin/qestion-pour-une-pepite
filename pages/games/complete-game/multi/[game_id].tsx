@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import router from "next/router";
 import { ObjectId } from "mongodb";
 import Link from "next/link";
+import Pusher from "pusher-js";
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -16,6 +17,9 @@ export const getServerSideProps: GetServerSideProps = async ({
   const session = getSession(req, res);
   const email = session?.user.email;
   const gameIdTest = query.game_id?.toString();
+  const questionNumber = query.num;
+  const APP_KEY = process.env.APP_KEY;
+  const APP_CLUSTER = process.env.APP_CLUSTER;
 
   const mongodb = await getDatabase();
 
@@ -63,6 +67,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       players: players,
       questionTest: questionTest,
       numeroManche: numeroManche,
+      questionNumber: questionNumber,
+      appKey: APP_KEY,
+      cluster: APP_CLUSTER,
     },
   };
 };
@@ -77,6 +84,9 @@ const Game1: React.FC<{
   players: any;
   questionTest: any;
   numeroManche: number;
+  questionNumber: number;
+  appKey: string;
+  cluster: string;
 }> = ({
   userDB,
   finished,
@@ -87,6 +97,9 @@ const Game1: React.FC<{
   players,
   questionTest,
   numeroManche,
+  questionNumber,
+  appKey,
+  cluster,
 }) => {
   const maxTimer = 30;
 
@@ -106,10 +119,7 @@ const Game1: React.FC<{
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [questionArray, setQuestionArray] = useState(questionTest);
-  const [question, setQuestion] = useState(
-    Math.floor(Math.random() * questionArray.length)
-  );
-  // const [shuffleAnswer, setShuffleAnswer] = useState(0);
+  const [question, setQuestion] = useState(questionNumber);
   const [winnerPlayer1, setWinnerPlayer1] = useState(false);
   const [winnerPlayer2, setWinnerPlayer2] = useState(false);
   const [winnerPlayer3, setWinnerPlayer3] = useState(false);
@@ -151,7 +161,34 @@ const Game1: React.FC<{
       setPoints(questionArray[question].points);
       setQuestionId(questionArray[question]._id);
 
-      return () => clearTimeout(timer1);
+      const pusher = new Pusher(`${appKey}`, {
+        cluster: `${cluster}`,
+      });
+      const channel = pusher.subscribe("tests");
+
+      if (channel) {
+        channel.bind(
+          "answerCorrectly",
+          (data: { clickedResponse: never; pseudo: never }) => {
+            setDisableTrue(true);
+            setPlayer1Points(players.player1.score9PtsGagnant + points);
+            showResult(true, data.pseudo, data.clickedResponse, points);
+          }
+        );
+        channel.bind(
+          "answerIncorrectly",
+          (data: { clickedResponse: never; pseudo: never }) => {
+            showResult(false, data.pseudo, data.clickedResponse, points);
+            setDisableWrong(true);
+          }
+        );
+      }
+
+      return () => {
+        clearTimeout(timer1);
+        channel.unbind("answerCorrectly");
+        channel.unbind("answerIncorrectly");
+      };
     } else if (timer <= 0 || disableTrue === true) {
       setIsDone(true);
       setDisableTime(true);
@@ -159,15 +196,14 @@ const Game1: React.FC<{
   }, [timer, isDone]);
 
   function handleResponse(clickedResponse: string) {
-    const bodyDataPlayer = { ...bodyData, clickedResponse: clickedResponse };
+    const bodyDataPlayer = {
+      ...bodyData,
+      pseudo: bodyData.pseudo1,
+      clickedResponse: clickedResponse,
+    };
+
     if (players.player1._id === userDB._id) {
       if (clickedResponse === goodAnswer) {
-        showResult(
-          true,
-          bodyData.pseudo1,
-          bodyData.goodAnswer,
-          bodyData.questionPoints
-        );
         fetch("/api/handle-answer-player1/good-answer", {
           method: "POST",
           headers: {
@@ -175,6 +211,13 @@ const Game1: React.FC<{
           },
           body: JSON.stringify(bodyDataPlayer),
         });
+
+        showResult(
+          true,
+          bodyData.pseudo1,
+          bodyData.goodAnswer,
+          bodyData.questionPoints
+        );
         setDisableTrue(true);
         setPlayer1Points(players.player1.score9PtsGagnant + points);
       } else {
@@ -303,7 +346,7 @@ const Game1: React.FC<{
   ) {
     if (isThatAGoodResponse) {
       setMessage(
-        `Congrats ${pseudo} ! The good answer was ${goodAnswer}. You won ${points} points`
+        `${pseudo} answered correctly ! The good answer was ${goodAnswer}. ${points} points ${pseudo} !`
       );
     } else {
       setMessage(`${pseudo} picked a wrong answer !`);
@@ -374,14 +417,14 @@ const Game1: React.FC<{
       });
     }
 
-    fetch("/api/games/generateMancheMulti", {
+    fetch(`/api/games/generateMancheMulti?num=${questionNumber}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(bodyData),
     }).then((result) => {
-      router.push(result.url), console.log(result.url);
+      router.push(result.url), console.log("result", result);
     });
   }
 

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getDatabase } from "../../../src/database";
 import { ObjectId } from "mongodb";
+import Pusher from "pusher";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const _id = req.body._id;
@@ -12,6 +13,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const questionId = req.body.questionId;
   const clickedResponse = req.body.clickedResponse;
   const timer = req.body.timer;
+  const APP_ID = process.env.APP_ID || "";
+  const APP_KEY = process.env.APP_KEY || "";
+  const APP_SECRET = process.env.APP_SECRET || "";
+  const APP_CLUSTER = process.env.APP_CLUSTER || "";
+  const pseudo = req.body.pseudo;
+
+  const pusher = new Pusher({
+    appId: APP_ID,
+    key: APP_KEY,
+    secret: APP_SECRET,
+    cluster: APP_CLUSTER,
+  });
+
+  pusher.trigger("tests", "answerCorrectly", {
+    clickedResponse : clickedResponse,
+    pseudo : pseudo,
+    points: points,
+  });
 
   const mongodb = await getDatabase();
 
@@ -19,7 +38,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     .db()
     .collection("current-games")
     .findOne({ _id: new ObjectId(gameId) });
-
 
   if (game?.players.player1._id === _id) {
     const currentScore: number = game?.players.player1.score9PtsGagnant
@@ -55,6 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else {
     console.log("wrong id");
   }
+
 
   res.end();
 };
