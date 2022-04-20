@@ -51,7 +51,7 @@ const Game1: React.FC<{
       setTimeout(() => timerReduce(), 1000);
     } else {
       setIsDone(true);
-      console.log(isDone);
+      // console.log(isDone);
     }
     if (isDone) {
       setDisable(true);

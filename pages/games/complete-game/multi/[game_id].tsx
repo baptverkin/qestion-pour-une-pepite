@@ -338,7 +338,6 @@ const Game1: React.FC<{
       });
     } else if (player2Points >= 9) {
       setWinnerPlayer2(true);
-      console.log(winnerPlayer2);
       setMessageWinnerPlayer2(
         `Congrats ${players.player2.pseudo}, you won the game !`
       );

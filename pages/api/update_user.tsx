@@ -17,7 +17,7 @@ export default async function handler(
       .db()
       .collection("users")
       .updateOne({ email: email }, { $set: { pseudo: pseudo } });
-    console.log("l'user existe");
+    // console.log("l'user existe");
   } else {
     await mongodb.db().collection("users").insertOne({
       pseudo: pseudo,
@@ -25,7 +25,7 @@ export default async function handler(
       playedGames: 0,
       email: email,
     });
-    console.log("l'user n'existe pas");
+    // console.log("l'user n'existe pas");
   }
   res.end();
 }
