@@ -10,6 +10,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const APP_CLUSTER = process.env.APP_CLUSTER || "";
   const pseudo = req.query.pseudo;
   const _id = req.query.id;
+  const gameId = req.query.gameId;
+
   console.log("id", _id);
   const pusher = new Pusher({
     appId: APP_ID,
@@ -20,15 +22,67 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const mongodb = await getDatabase();
 
-  const findPlayer = await mongodb
+  const findGame = await mongodb
     .db()
-    .collection("users")
-    .findOne({ _id: new ObjectId(_id.toString()) });
+    .collection("current-games")
+    .findOne({ _id: new ObjectId(gameId.toString()) });
+  console.log("findGale", findGame);
 
-  const newGame = await mongodb
-    .db()
-    .collection("current-games-multi")
-    .insertOne({ player: findPlayer });
+  if (findGame?.players.player2._id === "") {
+    const updateGame = await mongodb
+      .db()
+      .collection("current-games")
+      .updateOne(
+        { _id: new ObjectId(gameId.toString()) },
+        {
+          $set: {
+            "players.player2": {
+              _id: _id,
+              pseudo: pseudo,
+              score9PtsGagnant: 0,
+              score4ALaSuite: 0,
+              scoreFaceAFace: 0,
+            },
+          },
+        }
+      );
+  }else if (findGame?.players.player3._id === "") {
+    const updateGame = await mongodb
+      .db()
+      .collection("current-games")
+      .updateOne(
+        { _id: new ObjectId(gameId.toString()) },
+        {
+          $set: {
+            "players.player3": {
+              _id: _id,
+              pseudo: pseudo,
+              score9PtsGagnant: 0,
+              score4ALaSuite: 0,
+              scoreFaceAFace: 0,
+            },
+          },
+        }
+      );
+  }else if (findGame?.players.player4._id === "") {
+    const updateGame = await mongodb
+      .db()
+      .collection("current-games")
+      .updateOne(
+        { _id: new ObjectId(gameId.toString()) },
+        {
+          $set: {
+            "players.player4": {
+              _id: _id,
+              pseudo: pseudo,
+              score9PtsGagnant: 0,
+              score4ALaSuite: 0,
+              scoreFaceAFace: 0,
+            },
+          },
+        }
+      );
+  }
 
   pusher.trigger("tests", "test-event", {
     pseudo: pseudo,
