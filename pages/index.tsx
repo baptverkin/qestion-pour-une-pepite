@@ -40,19 +40,19 @@ const Home: React.FC<{ userDB: any; session: any }> = ({ userDB, session }) => {
           <br />
           {session === null ? (
             <Link href="/api/auth/login" passHref>
-              <button type="button" className="btn btn-primary">
+              <button type="button" className="btn btn-warning">
                 Commencer une partie &rarr;
               </button>
             </Link>
           ) : userDB === null || userDB === undefined ? (
             <Link href="/form" passHref>
-              <button type="button" className="btn btn-primary">
+              <button type="button" className="btn btn-warning">
                 Commencer une partie &rarr;
               </button>
             </Link>
           ) : (
             <Link href="/profile" passHref>
-              <button type="button" className="btn btn-primary">
+              <button type="button" className="btn btn-warning">
                 Commencer une partie &rarr;
               </button>
             </Link>
