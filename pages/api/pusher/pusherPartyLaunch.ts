@@ -15,14 +15,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const questionNumber = req.query.number;
   console.log("question number", questionNumber)
 
-  // console.log("id", _id);
   const pusher = new Pusher({
     appId: APP_ID,
     key: APP_KEY,
     secret: APP_SECRET,
     cluster: APP_CLUSTER,
   });
-  console.log("test call plop");
 
   pusher.trigger("tests", "partyLaunch", {
     questionNumber : questionNumber,

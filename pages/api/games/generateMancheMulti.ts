@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const clickedResponse = req.body.clickedResponse;
   const timer = req.body.timer;
   const answerIa2 = req.body.answerIa2;
+  const questionNumber = req.query.num;
 
   const mongodb = await getDatabase();
 
@@ -41,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       }
     );
-  res.redirect(307, `/games/complete-game/multi/${gameId}`).end();
+  res.redirect(307, `/games/complete-game/multi/${gameId}?num=${questionNumber}`).end();
 };
 
 export default handler;
