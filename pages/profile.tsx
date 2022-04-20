@@ -28,6 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     (a: any, b: any) => b.victories - a.victories
   );
   const usersDb = JSON.parse(JSON.stringify(usersSorted));
+  console.log(responses.indexOf(userDb))
   return {
     props: {
       _id: userDb._id,
@@ -67,7 +68,7 @@ const Profile: React.FC<{
       body: JSON.stringify(temp),
     }).then((result) => router.push(result.url));
   };
-
+  const index = leaderBoard.map((element: any) => element._id).indexOf(_id);
   return (
     <>
       <Layout>
@@ -84,11 +85,10 @@ const Profile: React.FC<{
               />
             </Link>
           </h2>
-
           <ul>
             <h4>{playedGames} parties</h4>
             <h4>{victories} victoires</h4>
-            <h4>Classement général : 3e</h4>
+            <h4>Classement général : {index + 1} </h4>
           </ul>
         </div>
         <br />
@@ -153,18 +153,81 @@ const Profile: React.FC<{
         </Card>
         <br></br>
 
-        <h3 className={styles.title}>Leaderboard :</h3>
-        <br />
-        <div className="container">
-          {leaderBoard.map((element: any, index: number) => (
-            <div className="leaderboard" key={uuidv4()}>
-              <p>
-                #{index + 1}: <u>{element.pseudo}</u>,{" "}
-                <u>{element.playedGames}</u> parties jouées,{" "}
-                <u>{element.victories}</u> parties gagnées
-              </p>
-            </div>
-          ))}
+        <h3 className={styles.title}>Entrainement</h3>
+        <br></br>
+
+        <div className="column">
+          <div
+            className="row"
+            style={{
+              textAlign: "center",
+              marginLeft: "100px",
+              marginRight: "100px",
+              justifyContent: "center",
+              marginBottom: "1em",
+            }}
+          >
+            <Card style={{ width: "18rem" }}>
+              <Card.Img variant="top" src="/images/neuf-points-gagnants.jpeg" />
+              <Card.Body>
+                <Card.Title>9 Points gagnants</Card.Title>
+                <Card.Text>
+                  Rapidité ! Les 3 premiers joueurs à obtenir 9 points se
+                  qualifient
+                </Card.Text>
+                <Link href="/games/config/" passHref={true}>
+                  <Button variant="primary">Commencez à jouer &rarr;</Button>
+                </Link>
+              </Card.Body>
+            </Card>
+
+            <Card style={{ width: "18rem" }}>
+              <Card.Img variant="top" src="/images/quatreàlasuite.jpg" />
+              <Card.Body>
+                <Card.Title>4 à la suite </Card.Title>
+                <Card.Text>
+                  Celui qui répond aux plus de questions successivement se
+                  qualifie
+                </Card.Text>
+                <Link href="#" passHref={true}>
+                  <Button variant="primary">Commencez à jouer &rarr;</Button>
+                </Link>
+              </Card.Body>
+            </Card>
+
+            <Card style={{ width: "18rem" }}>
+              <Card.Img variant="top" src="/images/faceàface.jpg" />
+              <Card.Body>
+                <Card.Title>Face à face</Card.Title>
+                <Card.Text>Le premier à 12 points remporte la partie</Card.Text>
+                <Link href="#" passHref={true}>
+                  <Button variant="primary">Commencez à jouer &rarr;</Button>
+                </Link>
+              </Card.Body>
+            </Card>
+          </div>
+        </div>
+        <div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">pseudo</th>
+                <th scope="col">playedGames</th>
+                <th scope="col">victories</th>
+              </tr>
+            </thead>
+            <tbody>
+                {leaderBoard.map((element: any, index: number) => (
+                  <tr key={uuidv4()}>
+                    <th scope="row">#{index + 1}</th>
+                    <td>{element.pseudo}</td>
+                    <td>{element.playedGames}</td>
+                    <td>{element.victories}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
         </div>
       </Layout>
     </>
