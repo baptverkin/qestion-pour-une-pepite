@@ -101,6 +101,7 @@ const Profile: React.FC<{
             // textAlign: "center",
             marginLeft: "100px",
             marginRight: "100px",
+            backgroundColor: "purple"
           }}
         >
           <Tabs defaultActiveKey="first">
@@ -128,28 +129,31 @@ const Profile: React.FC<{
           </Tabs>
           <Link href="/games/config" passHref={true}>
             <Button
-              variant="primary"
+            variant = "warning"
               style={{
                 textAlign: "center",
                 marginLeft: "40%",
                 marginRight: "40%",
                 marginBottom: "1em",
+                color:"white"
               }}
             >
               Jouer contre des IA &rarr;
             </Button>
           </Link>
-          <Button
-            onClick={handleSubmit}
-            style={{
-              textAlign: "center",
-              marginLeft: "40%",
-              marginRight: "40%",
-              marginBottom: "1em",
-            }}
-          >
-            Jouer en multijoueur &rarr;
-          </Button>
+            <Button
+              onClick={handleSubmit}
+              variant = "warning"
+              style={{
+                textAlign: "center",
+                marginLeft: "40%",
+                marginRight: "40%",
+                marginBottom: "1em",
+                color:"white"
+              }}
+            >
+              Jouer en multijoueur &rarr;
+            </Button>
         </Card>
         <br></br>
 
