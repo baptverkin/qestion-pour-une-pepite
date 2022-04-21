@@ -20,7 +20,6 @@ export const Layout: React.FC<{ children: any }> = ({
         <link rel="icon" href="/favicon.ico" />
 
       </Head>
-      <Script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></Script>
       <nav >
         <header className="p-3 bg-primary  text-white"  >
           <div className="container">

@@ -103,7 +103,7 @@ const Profile: React.FC<{
             // textAlign: "center",
             marginLeft: "100px",
             marginRight: "100px",
-            backgroundColor: "purple"
+            backgroundColor: "brown"
           }}
         >
           <Tabs defaultActiveKey="first">
