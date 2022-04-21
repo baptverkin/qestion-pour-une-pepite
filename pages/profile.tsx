@@ -175,14 +175,67 @@ const Profile: React.FC<{
               </tr>
             </thead>
             <tbody>
-                {leaderBoard.map((element: any, index: number) => (
-                  <tr key={uuidv4()}>
-                    <th scope="row">#{index + 1}</th>
-                    <td>{element.pseudo}</td>
-                    <td>{element.playedGames}</td>
-                    <td>{element.victories}</td>
+            <tr key={uuidv4()}>
+                    <th scope="row">#1</th>
+                    <td>{leaderBoard[0].pseudo}</td>
+                    <td>{leaderBoard[0].playedGames}</td>
+                    <td>{leaderBoard[0].victories}</td>
                   </tr>
-                ))}
+                  <tr key={uuidv4()}>
+                    <th scope="row">#2</th>
+                    <td>{leaderBoard[1].pseudo}</td>
+                    <td>{leaderBoard[1].playedGames}</td>
+                    <td>{leaderBoard[1].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#3</th>
+                    <td>{leaderBoard[2].pseudo}</td>
+                    <td>{leaderBoard[2].playedGames}</td>
+                    <td>{leaderBoard[2].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#4</th>
+                    <td>{leaderBoard[3].pseudo}</td>
+                    <td>{leaderBoard[3].playedGames}</td>
+                    <td>{leaderBoard[3].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#5</th>
+                    <td>{leaderBoard[4].pseudo}</td>
+                    <td>{leaderBoard[4].playedGames}</td>
+                    <td>{leaderBoard[4].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#6</th>
+                    <td>{leaderBoard[5].pseudo}</td>
+                    <td>{leaderBoard[5].playedGames}</td>
+                    <td>{leaderBoard[5].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#7</th>
+                    <td>{leaderBoard[6].pseudo}</td>
+                    <td>{leaderBoard[6].playedGames}</td>
+                    <td>{leaderBoard[6].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#8</th>
+                    <td>{leaderBoard[7].pseudo}</td>
+                    <td>{leaderBoard[7].playedGames}</td>
+                    <td>{leaderBoard[7].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#9</th>
+                    <td>{leaderBoard[8].pseudo}</td>
+                    <td>{leaderBoard[8].playedGames}</td>
+                    <td>{leaderBoard[8].victories}</td>
+                  </tr>
+                  <tr key={uuidv4()}>
+                    <th scope="row">#10</th>
+                    <td>{leaderBoard[9].pseudo}</td>
+                    <td>{leaderBoard[9].playedGames}</td>
+                    <td>{leaderBoard[9].victories}</td>
+                  </tr>
+
             </tbody>
           </table>
         </div>
