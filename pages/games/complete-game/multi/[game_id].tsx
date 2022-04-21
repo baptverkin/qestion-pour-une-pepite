@@ -151,6 +151,66 @@ const Game1: React.FC<{
   };
 
   useEffect(() => {
+    const pusher = new Pusher(`${appKey}`, {
+      cluster: `${cluster}`,
+    });
+    const channel = pusher.subscribe("tests");
+    console.log("Channel 158", {channel})
+    if (channel) {
+      console.log("channel line 175")
+      channel.bind(
+        "answerCorrectly",
+        (data: { clickedResponse: never; pseudo: never }) => {
+          setDisableTrue(true);
+          console.log("bind answer correctly line 179")
+          if (data.pseudo === players.player1.pseudo) {
+            setPlayer1Points(players.player1.score9PtsGagnant + points);
+          } else if (data.pseudo === players.player2.pseudo) {
+            setPlayer2Points(players.player2.score9PtsGagnant + points);
+          } else if (data.pseudo === players.player3.pseudo) {
+            setPlayer3Points(players.player3.score9PtsGagnant + points);
+          } else if (data.pseudo === players.player4.pseudo) {
+            setPlayer4Points(players.player4.score9PtsGagnant + points);
+          }
+          showResult(true, data.pseudo, data.clickedResponse, points);
+        }
+      );
+      channel.bind(
+        "answerIncorrectly",
+        (data: { clickedResponse: never; pseudo: never }) => {
+          console.log("bind answer incorrectly line 195")
+          showResult(false, data.pseudo, data.clickedResponse, points);
+          setDisableWrong(true);
+        }
+      );
+      channel.bind(
+        "nextManche",
+        (data: { nextQuestionIndex: never; previousQuestionID: never }) => {
+          console.log("bind answer next manche line 203")
+          setQuestionArray(
+            questionArray.filter(
+              (question: any) => question._id !== data.previousQuestionID
+            )
+          );
+          setQuestion(data.nextQuestionIndex);
+          setTimer(30);
+          setIsDone(false);
+          setDisableTime(false);
+          setDisableTrue(false);
+          setDisableWrong(false);
+          setMessage("");
+          setResponse("");
+        }
+      );
+    }
+    return () => {
+      // clearTimeout(timer1);
+      channel.unbind("answerCorrectly");
+      channel.unbind("answerIncorrectly");
+    };
+  }, [])
+
+  useEffect(() => {
     if (timer > 0) {
       const timer1 = setTimeout(() => setTimer(timer - 1), 1000);
 
@@ -565,7 +625,6 @@ const Game1: React.FC<{
         <>
           <div className={styles.description}>
             {" "}
-            {/* {console.log("question", question)} */}
             {questionArray[question].question}
           </div>
           {disableTrue ? (
