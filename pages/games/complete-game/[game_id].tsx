@@ -127,6 +127,13 @@ const Game1: React.FC<{
   const [messageWinnerPlayer2, setMessageWinnerPlayer2] = useState("");
   const [messageWinnerPlayer3, setMessageWinnerPlayer3] = useState("");
   const [messageWinnerPlayer4, setMessageWinnerPlayer4] = useState("");
+  //style useStates
+  const [styleButton1, setStyleButton1] = useState({});
+  const [styleButton2, setStyleButton2] = useState({});
+  const [styleButton3, setStyleButton3] = useState({});
+  const [styleButton4, setStyleButton4] = useState({});
+  const [styleButton5, setStyleButton5] = useState({});
+  const [styleButton6, setStyleButton6] = useState({});
 
   const bodyData = {
     gameId: gameId,
@@ -323,6 +330,57 @@ const Game1: React.FC<{
     }
   }, [timer, isDone]);
 
+  function handleAnswerButtonColor(question: string, color: string) {
+    if (question === answers[0] && color === "green") {
+      setStyleButton1({
+        background: "green",
+      });
+    } else if (question === answers[0] && color === "red") {
+      setStyleButton1({
+        background: "red",
+      });
+    } else if (question === answers[1] && color === "green") {
+      setStyleButton2({
+        background: "green",
+      });
+    } else if (question === answers[1] && color === "red") {
+      setStyleButton2({
+        background: "red",
+      });
+    } else if (question === answers[2] && color === "green") {
+      setStyleButton3({
+        background: "green",
+      });
+    } else if (question === answers[2] && color === "red") {
+      setStyleButton3({
+        background: "red",
+      });
+    } else if (question === answers[3] && color === "green") {
+      setStyleButton4({
+        background: "green",
+      });
+    } else if (question === answers[3] && color === "red") {
+      setStyleButton4({
+        background: "red",
+      });
+    } else if (question === answers[4] && color === "green") {
+      setStyleButton5({
+        background: "green",
+      });
+    } else if (question === answers[4] && color === "red") {
+      setStyleButton5({
+        "background-color": "red",
+      });
+    } else if (question === answers[5] && color === "green") {
+      setStyleButton6({
+        background: "green",
+      });
+    } else if (question === answers[5] && color === "red") {
+      setStyleButton6({
+        background: "red",
+      });
+    }
+  }
   function handleResponse(clickedResponse: string) {
     const bodyDataPlayer1 = { ...bodyData, clickedResponse: clickedResponse };
     if (clickedResponse === goodAnswer) {
@@ -339,6 +397,7 @@ const Game1: React.FC<{
         },
         body: JSON.stringify(bodyDataPlayer1),
       });
+      handleAnswerButtonColor(clickedResponse, "green");
       setDisableTrue(true);
       setPlayer1Points(players.player1.score9PtsGagnant + points);
     } else {
@@ -349,6 +408,7 @@ const Game1: React.FC<{
         bodyData.questionPoints
       );
       setDisableWrong(true);
+      handleAnswerButtonColor(clickedResponse, "red");
       fetch("/api/handle-answer-player1/wrong-answer", {
         method: "POST",
         headers: {
@@ -389,6 +449,12 @@ const Game1: React.FC<{
     setIaTimer3(15);
     setMessage("");
     setResponse("");
+    setStyleButton1({});
+    setStyleButton2({});
+    setStyleButton3({});
+    setStyleButton4({});
+    setStyleButton5({});
+    setStyleButton6({});
 
     // const newArrAnswers = [
     //   ...questionArray[question].responses,
@@ -477,7 +543,11 @@ const Game1: React.FC<{
           {players.player4.pseudo}: {player4Points}
           <br></br>
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-warning" style={{color:"white"}}>
+            <button
+              type="button"
+              className="btn btn-warning"
+              style={{ color: "white" }}
+            >
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -495,7 +565,11 @@ const Game1: React.FC<{
           {players.player4.pseudo}: {player4Points}
           <br></br>
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-warning" style={{color:"white"}}>
+            <button
+              type="button"
+              className="btn btn-warning"
+              style={{ color: "white" }}
+            >
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -513,7 +587,11 @@ const Game1: React.FC<{
           {players.player4.pseudo}: {player4Points}
           <br></br>
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-warning" style={{color:"white"}}>
+            <button
+              type="button"
+              className="btn btn-warning"
+              style={{ color: "white" }}
+            >
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -531,7 +609,11 @@ const Game1: React.FC<{
           {players.player4.pseudo}: {player4Points}
           <br></br>
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-warning" style={{color:"white"}}>
+            <button
+              type="button"
+              className="btn btn-warning"
+              style={{ color: "white" }}
+            >
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -554,6 +636,7 @@ const Game1: React.FC<{
                 {" "}
                 <button
                   className="button button2"
+                  style={styleButton1}
                   disabled={disableTrue || disableWrong || disableTime}
                   onClick={() => {
                     setResponse(answers[0]);
@@ -566,6 +649,7 @@ const Game1: React.FC<{
               <div className="column">
                 <button
                   className="button button2"
+                  style={styleButton2}
                   disabled={disableTrue || disableWrong || disableTime}
                   onClick={() => {
                     setResponse(answers[1]);
@@ -581,6 +665,7 @@ const Game1: React.FC<{
                 {" "}
                 <button
                   className="button button2"
+                  style={styleButton3}
                   disabled={disableTrue || disableWrong || disableTime}
                   onClick={() => {
                     setResponse(answers[2]);
@@ -593,6 +678,7 @@ const Game1: React.FC<{
               <div className="column">
                 <button
                   className="button button2"
+                  style={styleButton4}
                   disabled={disableTrue || disableWrong || disableTime}
                   onClick={() => {
                     setResponse(answers[3]);
@@ -608,6 +694,7 @@ const Game1: React.FC<{
                 {" "}
                 <button
                   className="button button2"
+                  style={styleButton5}
                   disabled={disableTrue || disableWrong || disableTime}
                   onClick={() => {
                     setResponse(answers[4]);
@@ -620,6 +707,7 @@ const Game1: React.FC<{
               <div className="column">
                 <button
                   className="button button2"
+                  style={styleButton6}
                   disabled={disableTrue || disableWrong || disableTime}
                   onClick={() => {
                     setResponse(answers[5]);
@@ -645,7 +733,7 @@ const Game1: React.FC<{
               <button
                 type="button"
                 className="btn btn-warning"
-                style={{color:"white"}}
+                style={{ color: "white" }}
                 onClick={endOfManche}
               >
                 Next question &rarr;
