@@ -190,6 +190,9 @@ const Game1: React.FC<{
             setDisableWrong(true);
           }
         );
+        channel.bind("nextManche", (data: { questionNumber: never }) => {
+          setQuestion(data.questionNumber);
+        });
       }
 
       return () => {
@@ -429,7 +432,7 @@ const Game1: React.FC<{
       });
     }
 
-    fetch(`/api/games/generateMancheMulti?num=${questionNumber}`, {
+    fetch(`/api/games/generateMancheMulti?num=${question}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
