@@ -113,7 +113,7 @@ const GameConfig: React.FC<{
 
   return (
     <Layout>
-      <div className="container">
+      <div className="container" style={{marginBottom:"2em", marginTop:"2em"}}>
         <h3>Configurer la partie :</h3>
         <label>Joueur 1 : </label> {pseudo}
         <br />
@@ -140,7 +140,10 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
-        <Button onClick={handleSubmit}>Lancer la partie &rarr;</Button>
+        <Button onClick={handleSubmit} variant = "warning"
+              style={{
+                color:"white"
+              }}>Lancer la partie &rarr;</Button>
       </div>
     </Layout>
   );

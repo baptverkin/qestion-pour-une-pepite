@@ -490,9 +490,10 @@ const Game1: React.FC<{
         9 points gagnants
       </div>
       {winnerPlayer1 ? (
-        <div className="container">
-          {messageWinnerPlayer1}
-          <br></br>
+        <div className={styles.title} style={{marginBottom:"5em",marginTop:"2em"}}>
+        🎉{messageWinnerPlayer1}🎉
+        <br></br>
+        <br />
           {players.player1.pseudo}: {player1Points}
           &nbsp;&nbsp;&nbsp;
           {players.player2.pseudo}: {player2Points}
@@ -501,6 +502,7 @@ const Game1: React.FC<{
           &nbsp;&nbsp;&nbsp;
           {players.player4.pseudo}: {player4Points}
           <br></br>
+          <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-primary">
               Back to my Profile &rarr;
@@ -508,9 +510,10 @@ const Game1: React.FC<{
           </Link>
         </div>
       ) : winnerPlayer2 ? (
-        <div className="container">
-          {messageWinnerPlayer2}
+        <div className={styles.title} style={{marginBottom:"5em",marginTop:"2em"}}>
+          🎉{messageWinnerPlayer2}🎉
           <br></br>
+          <br />
           {players.player1.pseudo}: {player1Points}
           &nbsp;&nbsp;&nbsp;
           {players.player2.pseudo}: {player2Points}
@@ -519,6 +522,7 @@ const Game1: React.FC<{
           &nbsp;&nbsp;&nbsp;
           {players.player4.pseudo}: {player4Points}
           <br></br>
+          <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-primary">
               Back to my Profile &rarr;
@@ -526,9 +530,10 @@ const Game1: React.FC<{
           </Link>
         </div>
       ) : winnerPlayer3 ? (
-        <div className="container">
-          {messageWinnerPlayer3}
+        <div className={styles.title} style={{marginBottom:"5em",marginTop:"2em"}}>
+          🎉{messageWinnerPlayer3}🎉
           <br></br>
+          <br />
           {players.player1.pseudo}: {player1Points}
           &nbsp;&nbsp;&nbsp;
           {players.player2.pseudo}: {player2Points}
@@ -537,6 +542,7 @@ const Game1: React.FC<{
           &nbsp;&nbsp;&nbsp;
           {players.player4.pseudo}: {player4Points}
           <br></br>
+          <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-primary">
               Back to my Profile &rarr;
@@ -544,9 +550,10 @@ const Game1: React.FC<{
           </Link>
         </div>
       ) : winnerPlayer4 ? (
-        <div className="container">
-          {messageWinnerPlayer4}
+        <div className={styles.title} style={{marginBottom:"5em",marginTop:"2em"}}>
+          🎉{messageWinnerPlayer4}🎉
           <br></br>
+          <br />
           {players.player1.pseudo}: {player1Points}
           &nbsp;&nbsp;&nbsp;
           {players.player2.pseudo}: {player2Points}
@@ -555,6 +562,7 @@ const Game1: React.FC<{
           &nbsp;&nbsp;&nbsp;
           {players.player4.pseudo}: {player4Points}
           <br></br>
+          <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-primary">
               Back to my Profile &rarr;

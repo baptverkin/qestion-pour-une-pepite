@@ -172,7 +172,7 @@ const GameConfig: React.FC<{
 
   return (
     <Layout>
-      <div className="container">
+      <div className="container" style={{marginTop:"2em"}}>
         <h3>Configurer la partie :</h3>
         <br />
         <DisplayNames
@@ -185,7 +185,7 @@ const GameConfig: React.FC<{
           setDisableFull={setDisableFull}
         />
         <br />
-        <Button onClick={handler} disabled={loading || disableFull}>
+        <Button variant="warning" onClick={handler} disabled={loading || disableFull} style={{color:"white"}}>
           Join party
         </Button>
         <br />
@@ -193,7 +193,7 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
-        <Button onClick={handleEvent} disabled={!disableFull}>
+        <Button variant="warning" onClick={handleEvent} disabled={!disableFull} style={{color:"white"}}>
           Lancer la partie &rarr;
         </Button>
       </div>

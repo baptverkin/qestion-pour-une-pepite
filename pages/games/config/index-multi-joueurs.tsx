@@ -126,12 +126,12 @@ const GameConfig: React.FC<{
 
   return (
     <Layout>
-      <div className="container">
+      <div className="container" style={{marginTop:"2em"}}>
         <h3>Configurer la partie :</h3>
         <br />
         <DisplayNames channel={channel} />
         <br />
-        <Button onClick={handler} disabled={loading}>
+        <Button onClick={handler} disabled={loading} variant="warning" style={{ color:"white"}}>
           Join party
         </Button>
         <br />
