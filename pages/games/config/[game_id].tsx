@@ -83,13 +83,16 @@ const DisplayNames: React.FC<{
           }
           return currentNames;
         });
-        if (names.length === 3) {
-          setDisableFull(true);
-        }
       });
       return () => {
         channel.unbind("test-event");
       };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (names.length >= 3) {
+      setDisableFull(true);
     }
   }, [names]);
 
