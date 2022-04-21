@@ -17,7 +17,10 @@ export const getServerSideProps: GetServerSideProps = async ({
   const session = getSession(req, res);
   const email = session?.user.email;
   const gameIdTest = query.game_id?.toString();
-  const questionNumber = query.num;
+  let questionNumber;
+  if (query.num !== undefined) {
+    questionNumber = query.num;
+  }
   const APP_KEY = process.env.APP_KEY;
   const APP_CLUSTER = process.env.APP_CLUSTER;
 
@@ -190,9 +193,24 @@ const Game1: React.FC<{
             setDisableWrong(true);
           }
         );
-        channel.bind("nextManche", (data: { questionNumber: never }) => {
-          setQuestion(data.questionNumber);
-        });
+        channel.bind(
+          "nextManche",
+          (data: { nextQuestionIndex: never; previousQuestionID: never }) => {
+            setQuestionArray(
+              questionArray.filter(
+                (question: any) => question._id !== data.previousQuestionID
+              )
+            );
+            setQuestion(data.nextQuestionIndex);
+            setTimer(30);
+            setIsDone(false);
+            setDisableTime(false);
+            setDisableTrue(false);
+            setDisableWrong(false);
+            setMessage("");
+            setResponse("");
+          }
+        );
       }
 
       return () => {
@@ -365,22 +383,15 @@ const Game1: React.FC<{
   }
 
   function endOfManche(questionNumber = null): any {
+    const previousQuestionID = questionArray[question]._id;
     const newQuestionArray = questionArray.filter((e: any) => {
       return e.question !== questionArray[question].question;
     });
-    setQuestionArray(newQuestionArray);
-    if (questionNumber === null) {
-      setQuestion(Math.floor(Math.random() * newQuestionArray.length));
-    } else {
-      setQuestion(questionNumber);
-    }
-    setTimer(30);
-    setIsDone(false);
-    setDisableTime(false);
-    setDisableTrue(false);
-    setDisableWrong(false);
-    setMessage("");
-    setResponse("");
+
+    const newQuestionIndex = Math.floor(
+      Math.random() * newQuestionArray.length
+    );
+    // setQuestionArray(newQuestionArray);
 
     if (player1Points >= 9) {
       setWinnerPlayer1(true);
@@ -432,15 +443,16 @@ const Game1: React.FC<{
       });
     }
 
-    fetch(`/api/games/generateMancheMulti?num=${question}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyData),
-    }).then((result) => {
-      router.push(result.url), console.log("result", result);
-    });
+    fetch(
+      `/api/games/generateMancheMulti?num=${newQuestionIndex}&previousQuestionIDd=${previousQuestionID}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      }
+    );
   }
 
   return (
@@ -525,6 +537,7 @@ const Game1: React.FC<{
         <>
           <div className={styles.description}>
             {" "}
+            {console.log("question", question)}
             {questionArray[question].question}
           </div>
           {disableTrue ? (
