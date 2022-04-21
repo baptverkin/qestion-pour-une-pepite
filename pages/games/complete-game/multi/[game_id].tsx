@@ -176,13 +176,21 @@ const Game1: React.FC<{
           "answerCorrectly",
           (data: { clickedResponse: never; pseudo: never }) => {
             setDisableTrue(true);
+            console.log("disabltrue", disableTrue);
+            console.log("pseudo:", data.pseudo);
+            console.log("clickedResponse", data.clickedResponse);
+
             if (data.pseudo === players.player1.pseudo) {
+              console.log("player1 pseudo :", players.player1.pseudo);
               setPlayer1Points(players.player1.score9PtsGagnant + points);
             } else if (data.pseudo === players.player2.pseudo) {
+              console.log("player2 pseudo :", players.player2.pseudo);
               setPlayer2Points(players.player2.score9PtsGagnant + points);
             } else if (data.pseudo === players.player3.pseudo) {
+              console.log("player3 pseudo :", players.player3.pseudo);
               setPlayer3Points(players.player3.score9PtsGagnant + points);
             } else if (data.pseudo === players.player4.pseudo) {
+              console.log("player4 pseudo :", players.player4.pseudo);
               setPlayer4Points(players.player4.score9PtsGagnant + points);
             }
             showResult(true, data.pseudo, data.clickedResponse, points);
@@ -227,20 +235,19 @@ const Game1: React.FC<{
   }, [timer, isDone]);
 
   function handleResponse(clickedResponse: string) {
-    const bodyDataPlayer = {
-      ...bodyData,
-      pseudo: bodyData.pseudo1,
-      clickedResponse: clickedResponse,
-    };
-
     if (players.player1._id === userDB._id) {
+      const bodyDataPlayer1 = {
+        ...bodyData,
+        pseudo: bodyData.pseudo1,
+        clickedResponse: clickedResponse,
+      };
       if (clickedResponse === goodAnswer) {
         fetch("/api/handle-answer-player1/good-answer", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer1),
         });
 
         showResult(
@@ -264,10 +271,15 @@ const Game1: React.FC<{
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer1),
         });
       }
     } else if (players.player2._id === userDB._id) {
+      const bodyDataPlayer2 = {
+        ...bodyData,
+        pseudo: bodyData.pseudo2,
+        clickedResponse: clickedResponse,
+      };
       if (clickedResponse === goodAnswer) {
         showResult(
           true,
@@ -280,7 +292,7 @@ const Game1: React.FC<{
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer2),
         });
         setDisableTrue(true);
         setPlayer2Points(players.player2.score9PtsGagnant + points);
@@ -297,10 +309,15 @@ const Game1: React.FC<{
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer2),
         });
       }
     } else if (players.player3._id === userDB._id) {
+      const bodyDataPlayer3 = {
+        ...bodyData,
+        pseudo: bodyData.pseudo3,
+        clickedResponse: clickedResponse,
+      };
       if (clickedResponse === goodAnswer) {
         showResult(
           true,
@@ -313,7 +330,7 @@ const Game1: React.FC<{
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer3),
         });
         setDisableTrue(true);
         setPlayer3Points(players.player3.score9PtsGagnant + points);
@@ -330,10 +347,15 @@ const Game1: React.FC<{
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer3),
         });
       }
     } else if (players.player4._id === userDB._id) {
+      const bodyDataPlayer4 = {
+        ...bodyData,
+        pseudo: bodyData.pseudo4,
+        clickedResponse: clickedResponse,
+      };
       if (clickedResponse === goodAnswer) {
         showResult(
           true,
@@ -346,7 +368,7 @@ const Game1: React.FC<{
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer4),
         });
         setDisableTrue(true);
         setPlayer4Points(players.player4.score9PtsGagnant + points);
@@ -363,7 +385,7 @@ const Game1: React.FC<{
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bodyDataPlayer),
+          body: JSON.stringify(bodyDataPlayer4),
         });
       }
     }
