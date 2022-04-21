@@ -620,10 +620,12 @@ const Game1: React.FC<{
         </div>
       ) : (
         <>
-          <div className={styles.description}>
+          <div className="bubble bubble-bottom-left" contentEditable>
             {" "}
             {questionArray[question].question}
           </div>
+          <br />
+          <br />
           {disableTrue ? (
             <></>
           ) : (
