@@ -53,7 +53,7 @@ export const Layout: React.FC<{ children: any }> = ({
       </nav>
       {children}
 
-      <footer className={styles.footer} style={{maxHeight: "20%"}}>
+      <footer className={styles.footer} >
         <p>Fait par des pépites pour des pépites</p>
       </footer>
     </div>

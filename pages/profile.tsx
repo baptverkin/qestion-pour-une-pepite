@@ -72,8 +72,8 @@ const Profile: React.FC<{
   return (
     <>
       <Layout>
-        <div className="container">
-          <h2>
+        <div className="container" style={{marginTop:"2em"}}>
+          <h2 >
             Bonjour {pseudo}&nbsp;&nbsp;&nbsp;
             <Link href="/form" passHref>
               <Image
