@@ -565,7 +565,7 @@ const Game1: React.FC<{
           <br></br>
           <br />
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-primary">
+            <button type="button" className="btn btn-warning" style={{color:"white"}}>
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -585,7 +585,7 @@ const Game1: React.FC<{
           <br></br>
           <br />
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-primary">
+            <button type="button" className="btn btn-warning" style={{color:"white"}}>
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -605,7 +605,7 @@ const Game1: React.FC<{
           <br></br>
           <br />
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-primary">
+            <button type="button" className="btn btn-warning" style={{color:"white"}}>
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -625,7 +625,7 @@ const Game1: React.FC<{
           <br></br>
           <br />
           <Link href="/profile" passHref>
-            <button type="button" className="btn btn-primary">
+            <button type="button" className="btn btn-warning" style={{color:"white"}}>
               Back to my Profile &rarr;
             </button>
           </Link>
@@ -738,7 +738,8 @@ const Game1: React.FC<{
             <div>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-warning"
+                style={{color:"white"}}
                 onClick={() => endOfManche()}
               >
                 Next question &rarr;
