@@ -69,12 +69,12 @@ const DisplayNames: React.FC<{
   setDisableFull,
 }) => {
   const [names, setNames] = React.useState([pseudoPlayer1]);
-  const pusher = new Pusher(`${appKey}`, {
-    cluster: `${cluster}`,
-  });
-  const channel = pusher.subscribe("tests");
 
   useEffect(() => {
+    const pusher = new Pusher(`${appKey}`, {
+      cluster: `${cluster}`,
+    });
+    const channel = pusher.subscribe("tests");
     if (channel) {
       channel.bind("test-event", (data: { pseudo: never }) => {
         setNames((currentNames) => {
@@ -91,7 +91,7 @@ const DisplayNames: React.FC<{
         channel.unbind("test-event");
       };
     }
-  }, [channel, names]);
+  }, [names]);
 
   return (
     <div>
