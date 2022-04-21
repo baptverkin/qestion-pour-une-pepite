@@ -13,13 +13,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const questionId = req.body.questionId;
   const clickedResponse = req.body.clickedResponse;
   const timer = req.body.timer;
-  const answerIa2 = req.body.answerIa2;
-  const questionNumber = req.query.num;
+  const nextQuestionIndex = req.query.num;
   const APP_ID = process.env.APP_ID || "";
   const APP_KEY = process.env.APP_KEY || "";
   const APP_SECRET = process.env.APP_SECRET || "";
   const APP_CLUSTER = process.env.APP_CLUSTER || "";
   const pseudo = req.body.pseudo;
+  const previousQuestionID = req.query.previousQuestionID;
 
   const pusher = new Pusher({
     appId: APP_ID,
@@ -29,10 +29,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   pusher.trigger("tests", "nextManche", {
-    questionNumber: questionNumber,
-    clickedResponse : clickedResponse,
-    pseudo : pseudo,
-    points: points,
+    nextQuestionNumber: nextQuestionIndex,
+    previousQuestionID: previousQuestionID,
   });
 
   const mongodb = await getDatabase();
