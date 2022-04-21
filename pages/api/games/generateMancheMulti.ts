@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   pusher.trigger("tests", "nextManche", {
-    nextQuestionNumber: nextQuestionIndex,
+    nextQuestionIndex: nextQuestionIndex,
     previousQuestionID: previousQuestionID,
   });
 
@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       }
     );
-  res.redirect(307, `/games/complete-game/multi/${gameId}`).end();
+  res.end();
 };
 
 export default handler;

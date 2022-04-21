@@ -21,6 +21,8 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (query.num !== undefined) {
     questionNumber = query.num;
   }
+  const questionNumberParse = JSON.parse(JSON.stringify(questionNumber));
+
   const APP_KEY = process.env.APP_KEY;
   const APP_CLUSTER = process.env.APP_CLUSTER;
 
@@ -70,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       players: players,
       questionTest: questionTest,
       numeroManche: numeroManche,
-      questionNumber: questionNumber,
+      questionNumber: questionNumberParse,
       appKey: APP_KEY,
       cluster: APP_CLUSTER,
     },
