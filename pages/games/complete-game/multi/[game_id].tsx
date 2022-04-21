@@ -176,12 +176,14 @@ const Game1: React.FC<{
           "answerCorrectly",
           (data: { clickedResponse: never; pseudo: never }) => {
             setDisableTrue(true);
-            console.log("disabltrue", disableTrue);
+            console.log("\n\n\n\n ######disabltrue", disableTrue);
             console.log("pseudo:", data.pseudo);
             console.log("clickedResponse", data.clickedResponse);
 
             if (data.pseudo === players.player1.pseudo) {
               console.log("player1 pseudo :", players.player1.pseudo);
+              console.log("player1 points :", players.player1.score9PtsGagnant);
+
               setPlayer1Points(players.player1.score9PtsGagnant + points);
             } else if (data.pseudo === players.player2.pseudo) {
               console.log("player2 pseudo :", players.player2.pseudo);
@@ -225,8 +227,9 @@ const Game1: React.FC<{
 
       return () => {
         clearTimeout(timer1);
-        channel.unbind("answerCorrectly");
-        channel.unbind("answerIncorrectly");
+        // channel.unbind("answerCorrectly");
+        // channel.unbind("answerIncorrectly");
+        // channel.unbind("nextManche");
       };
     } else if (timer <= 0 || disableTrue === true) {
       setIsDone(true);
@@ -415,6 +418,7 @@ const Game1: React.FC<{
     const newQuestionIndex = Math.floor(
       Math.random() * newQuestionArray.length
     );
+    console.log("New question index :", newQuestionIndex);
     // setQuestionArray(newQuestionArray);
 
     if (player1Points >= 9) {
@@ -465,18 +469,18 @@ const Game1: React.FC<{
         },
         body: JSON.stringify(bodyData),
       });
+    } else {
+      fetch(
+        `/api/games/generateMancheMulti?num=${newQuestionIndex}&previousQuestionIDd=${previousQuestionID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bodyData),
+        }
+      );
     }
-
-    fetch(
-      `/api/games/generateMancheMulti?num=${newQuestionIndex}&previousQuestionIDd=${previousQuestionID}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyData),
-      }
-    );
   }
 
   return (
@@ -561,7 +565,7 @@ const Game1: React.FC<{
         <>
           <div className={styles.description}>
             {" "}
-            {console.log("question", question)}
+            {/* {console.log("question", question)} */}
             {questionArray[question].question}
           </div>
           {disableTrue ? (
