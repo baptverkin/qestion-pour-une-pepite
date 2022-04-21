@@ -155,14 +155,14 @@ const Game1: React.FC<{
       cluster: `${cluster}`,
     });
     const channel = pusher.subscribe("tests");
-    console.log("Channel 158", {channel})
+    console.log("Channel 158", { channel });
     if (channel) {
-      console.log("channel line 175")
+      console.log("channel line 175");
       channel.bind(
         "answerCorrectly",
         (data: { clickedResponse: never; pseudo: never }) => {
           setDisableTrue(true);
-          console.log("bind answer correctly line 179")
+          console.log("bind answer correctly line 179");
           if (data.pseudo === players.player1.pseudo) {
             setPlayer1Points(players.player1.score9PtsGagnant + points);
           } else if (data.pseudo === players.player2.pseudo) {
@@ -178,7 +178,7 @@ const Game1: React.FC<{
       channel.bind(
         "answerIncorrectly",
         (data: { clickedResponse: never; pseudo: never }) => {
-          console.log("bind answer incorrectly line 195")
+          console.log("bind answer incorrectly line 195");
           showResult(false, data.pseudo, data.clickedResponse, points);
           setDisableWrong(true);
         }
@@ -186,7 +186,7 @@ const Game1: React.FC<{
       channel.bind(
         "nextManche",
         (data: { nextQuestionIndex: never; previousQuestionID: never }) => {
-          console.log("bind answer next manche line 203")
+          console.log("bind answer next manche line 203");
           setQuestionArray(
             questionArray.filter(
               (question: any) => question._id !== data.previousQuestionID
@@ -208,7 +208,7 @@ const Game1: React.FC<{
       channel.unbind("answerCorrectly");
       channel.unbind("answerIncorrectly");
     };
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (timer > 0) {
@@ -243,6 +243,7 @@ const Game1: React.FC<{
             if (data.pseudo === players.player1.pseudo) {
               console.log("player1 pseudo :", players.player1.pseudo);
               console.log("player1 points :", players.player1.score9PtsGagnant);
+              console.log("points :", points);
 
               setPlayer1Points(players.player1.score9PtsGagnant + points);
             } else if (data.pseudo === players.player2.pseudo) {
