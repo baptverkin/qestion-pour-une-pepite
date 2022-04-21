@@ -46,18 +46,33 @@ export const getServerSideProps: GetServerSideProps = async ({
       gameId: gameId,
       appKey: APP_KEY,
       cluster: APP_CLUSTER,
+      currentGame: currentGame,
     },
   };
 };
 
 const DisplayNames: React.FC<{
-  channel?: Channel;
   pseudoPlayer1: string;
   gameId: ObjectId;
   userDb: any;
   pseudo: string;
-}> = ({ channel, pseudoPlayer1, userDb, gameId, pseudo }) => {
+  appKey: string;
+  cluster: string;
+  setDisableFull: any;
+}> = ({
+  pseudoPlayer1,
+  userDb,
+  gameId,
+  pseudo,
+  appKey,
+  cluster,
+  setDisableFull,
+}) => {
   const [names, setNames] = React.useState([pseudoPlayer1]);
+  const pusher = new Pusher(`${appKey}`, {
+    cluster: `${cluster}`,
+  });
+  const channel = pusher.subscribe("tests");
 
   useEffect(() => {
     if (channel) {
@@ -68,6 +83,9 @@ const DisplayNames: React.FC<{
           }
           return currentNames;
         });
+        if (names.length === 3) {
+          setDisableFull(true);
+        }
       });
       return () => {
         channel.unbind("test-event");
@@ -103,18 +121,20 @@ const GameConfig: React.FC<{
   gameId: ObjectId;
   pseudoPlayer1: string;
   userDb: any;
+  currentGame: any;
 }> = ({
   _id,
   pseudo,
-  email,
   appKey,
   cluster,
   gameId,
   pseudoPlayer1,
   userDb,
+  currentGame,
 }) => {
   const [channel, setChannel] = React.useState<Channel>();
   const [loading, setLoading] = React.useState(false);
+  const [disableFull, setDisableFull] = React.useState(false);
 
   useEffect(() => {
     const pusher = new Pusher(`${appKey}`, {
@@ -122,18 +142,8 @@ const GameConfig: React.FC<{
     });
 
     const channel = pusher.subscribe("tests");
-    // setChannel(myChannel);
-
-    console.log("coucou on est dans le useEffect");
-    // console.log("myChannel avant le if", myChannel);
-    console.log("channel avant le if", channel);
-
     if (channel) {
       channel.bind("partyLaunch", (data: { questionNumber: never }) => {
-        console.log("channel dans le if", channel);
-        console.log("data", data);
-        console.log("QuestionNumber", data.questionNumber);
-
         router.push(
           `/games/complete-game/multi/${gameId}?num=${data.questionNumber}`
         );
@@ -166,14 +176,16 @@ const GameConfig: React.FC<{
         <h3>Configurer la partie :</h3>
         <br />
         <DisplayNames
-          channel={channel}
           pseudo={pseudo}
           gameId={gameId}
           pseudoPlayer1={pseudoPlayer1}
           userDb={userDb}
+          cluster={cluster}
+          appKey={appKey}
+          setDisableFull={setDisableFull}
         />
         <br />
-        <Button onClick={handler} disabled={loading}>
+        <Button onClick={handler} disabled={loading || disableFull}>
           Join party
         </Button>
         <br />
@@ -181,7 +193,9 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
-        <Button onClick={handleEvent}>Lancer la partie &rarr;</Button>
+        <Button onClick={handleEvent} disabled={!disableFull}>
+          Lancer la partie &rarr;
+        </Button>
       </div>
     </Layout>
   );
