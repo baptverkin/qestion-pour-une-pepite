@@ -115,6 +115,7 @@ const GameConfig: React.FC<{
     <Layout>
       <div className="container" style={{marginBottom:"2em", marginTop:"2em"}}>
         <h3>Configurer la partie :</h3>
+        <br />
         <label>Joueur 1 : </label> {pseudo}
         <br />
         <label>Joueur 2 : </label> {pseudoPlayer2}
@@ -122,17 +123,19 @@ const GameConfig: React.FC<{
         <label>Joueur 3 : </label> {pseudoPlayer3}
         <br />
         <label>Joueur 4 : </label> {pseudoPlayer4}
+        <br />
+        <br />
         <h4>Choix de la difficulté : {difficulty} </h4>
         <ButtonGroup aria-label="Basic example">
-          <Button variant="secondary" value="facile" onClick={handleButtons}>
+          <Button variant="warning" value="facile" onClick={handleButtons} style={{color:"white"}}>
             Facile
           </Button>
           <br />
-          <Button variant="secondary" value="moyen" onClick={handleButtons}>
+          <Button variant="warning" value="moyen" onClick={handleButtons} style={{color:"white"}}>
             Moyen
           </Button>
           <br />
-          <Button variant="secondary" value="difficile" onClick={handleButtons}>
+          <Button variant="warning" value="difficile" onClick={handleButtons} style={{color:"white"}}>
             Difficile
           </Button>
         </ButtonGroup>
@@ -140,9 +143,10 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
+        <br />
         <Button onClick={handleSubmit} variant = "warning"
               style={{
-                color:"white"
+                color:"white",fontSize:"30px"
               }}>Lancer la partie &rarr;</Button>
       </div>
     </Layout>

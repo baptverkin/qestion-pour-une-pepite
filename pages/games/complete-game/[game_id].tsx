@@ -628,7 +628,7 @@ const Game1: React.FC<{
         </div>
       ) : (
         <>
-          <div className="bubble bubble-bottom-left" contentEditable>
+         <div className="bubble" contentEditable >
             {" "}
             {questionArray[question].question}
           </div>
@@ -637,7 +637,7 @@ const Game1: React.FC<{
           {disableTrue ? (
             <></>
           ) : (
-            <div style={{ marginLeft: "20px" }}>{timer}</div>
+            <div style={{ marginLeft: "5%", fontSize:"50px"}}>{timer}</div>
           )}
           <div style={{ marginLeft: "20px" }}>{message}</div> <br></br>
           <div className="container">

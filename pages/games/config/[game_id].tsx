@@ -196,7 +196,7 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
-        <Button variant="warning" onClick={handleEvent} disabled={!disableFull} style={{color:"white"}}>
+        <Button variant="warning" onClick={handleEvent} disabled={!disableFull} style={{color:"white",fontSize:"30px"}}>
           Lancer la partie &rarr;
         </Button>
       </div>

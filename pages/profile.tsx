@@ -120,7 +120,7 @@ const Profile: React.FC<{
                 Défie des IAs et devient le champion du 9 points gagnants
               </p>
             </Tab>
-            <Tab eventKey="third" title="Règles" className="container">
+            <Tab eventKey="third" title="Règles" className="container" >
               <p style={{ marginBottom: "1em", marginTop: "1em" }}>
                 <strong>Règles du jeu : </strong>
                 Quatre candidats sont en lice et doivent répondre à des

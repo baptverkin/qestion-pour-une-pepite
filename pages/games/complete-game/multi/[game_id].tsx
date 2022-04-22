@@ -546,10 +546,11 @@ const Game1: React.FC<{
 
   return (
     <Layout>
-      <div className={styles.title} style={{ marginTop: "30px" }}>
+      <div className={styles.title} style={{ marginTop: "30px",color:"gold" }}>
         {" "}
         9 points gagnants
       </div>
+      <br />
       {winnerPlayer1 ? (
         <div className={styles.title} style={{marginBottom:"5em",marginTop:"2em"}}>
         🎉{messageWinnerPlayer1}🎉
@@ -632,14 +633,16 @@ const Game1: React.FC<{
         </div>
       ) : (
         <>
-          <div className={styles.description}>
+
+          <div className="bubble" contentEditable >
             {" "}
             {questionArray[question].question}
           </div>
+
           {disableTrue ? (
             <></>
           ) : (
-            <div style={{ marginLeft: "20px" }}>{timer}</div>
+            <div style={{ marginLeft: "5%", fontSize:"50px"}}>{timer}</div>
           )}
           <div style={{ marginLeft: "20px" }}>{message}</div> <br></br>
           <div className="container">

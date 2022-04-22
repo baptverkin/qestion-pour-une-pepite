@@ -139,7 +139,7 @@ const GameConfig: React.FC<{
         <br />
         <br />
         <br />
-        <Button onClick={handleSubmit}>Lancer la partie &rarr;</Button>
+        <Button onClick={handleSubmit} style={{fontSize:"30px"}}>Lancer la partie &rarr;</Button>
       </div>
     </Layout>
   );
