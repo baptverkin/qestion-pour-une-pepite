@@ -164,13 +164,13 @@ const Game1: React.FC<{
           setDisableTrue(true);
           console.log("bind answer correctly line 179");
           if (data.pseudo === players.player1.pseudo) {
-            setPlayer1Points(players.player1.score9PtsGagnant + points);
+            setPlayer1Points(player1Points + points);
           } else if (data.pseudo === players.player2.pseudo) {
-            setPlayer2Points(players.player2.score9PtsGagnant + points);
+            setPlayer2Points(player2Points + points);
           } else if (data.pseudo === players.player3.pseudo) {
-            setPlayer3Points(players.player3.score9PtsGagnant + points);
+            setPlayer3Points(player3Points + points);
           } else if (data.pseudo === players.player4.pseudo) {
-            setPlayer4Points(players.player4.score9PtsGagnant + points);
+            setPlayer4Points(player4Points + points);
           }
           showResult(true, data.pseudo, data.clickedResponse, points);
         }
