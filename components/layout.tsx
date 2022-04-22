@@ -36,13 +36,13 @@ export const Layout: React.FC<{ children: any }> = ({
                 {user ? (
                   <Link href="/api/auth/logout" passHref={true}>
                     <button type="button" className="btn btn-warning" style ={{color:"white"}}>
-                      <a>Logout</a>
+                      <a>Déconnexion</a>
                     </button>
                   </Link>
                 ) : (
                   <Link href="/api/auth/login" passHref={true}>
                     <button type="button" className="btn btn-warning">
-                      <a>Login</a>
+                      <a>Connexion</a>
                     </button>
                   </Link>
                 )}

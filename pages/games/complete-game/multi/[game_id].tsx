@@ -463,10 +463,10 @@ const Game1: React.FC<{
   ) {
     if (isThatAGoodResponse) {
       setMessage(
-        `${pseudo} answered correctly ! The good answer was ${goodAnswer}. ${points} points ${pseudo} !`
+        `Félicitations ${pseudo} ! La bonne réponse est ${goodAnswer}. Vous avez gagné ${points} points`
       );
     } else {
-      setMessage(`${pseudo} picked a wrong answer !`);
+      setMessage(`${pseudo} a choisi une mauvaise réponse !`);
     }
   }
 
@@ -485,7 +485,7 @@ const Game1: React.FC<{
     if (player1Points >= 9) {
       setWinnerPlayer1(true);
       setMessageWinnerPlayer1(
-        `Congrats ${players.player1.pseudo}, you won the game !`
+        `Félicitations ${players.player1.pseudo}, Vous avez gagné la partie !`
       );
       fetch("/api/handle-end-of-game", {
         method: "POST",
@@ -497,7 +497,7 @@ const Game1: React.FC<{
     } else if (player2Points >= 9) {
       setWinnerPlayer2(true);
       setMessageWinnerPlayer2(
-        `Congrats ${players.player2.pseudo}, you won the game !`
+        `Félicitations ${players.player2.pseudo}, Vous avez gagné la partie !`
       );
       fetch("/api/handle-end-of-game", {
         method: "POST",
@@ -509,7 +509,7 @@ const Game1: React.FC<{
     } else if (player3Points >= 9) {
       setWinnerPlayer3(true);
       setMessageWinnerPlayer3(
-        `Congrats ${players.player3.pseudo}, you won the game !`
+        `Félicitations ${players.player3.pseudo}, Vous avez gagné la partie !`
       );
       fetch("/api/handle-end-of-game", {
         method: "POST",
@@ -521,7 +521,7 @@ const Game1: React.FC<{
     } else if (player4Points >= 9) {
       setWinnerPlayer4(true);
       setMessageWinnerPlayer4(
-        `Congrats ${players.player4.pseudo}, you won the game !`
+        `Félicitations ${players.player4.pseudo}, Vous avez gagné la partie !`
       );
       fetch("/api/handle-end-of-game", {
         method: "POST",
@@ -567,7 +567,7 @@ const Game1: React.FC<{
           <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-warning" style={{color:"white"}}>
-              Back to my Profile &rarr;
+              Retour au profil &rarr;
             </button>
           </Link>
         </div>
@@ -587,7 +587,7 @@ const Game1: React.FC<{
           <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-warning" style={{color:"white"}}>
-              Back to my Profile &rarr;
+              Retour au profil &rarr;
             </button>
           </Link>
         </div>
@@ -607,7 +607,7 @@ const Game1: React.FC<{
           <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-warning" style={{color:"white"}}>
-              Back to my Profile &rarr;
+              Retour au profil &rarr;
             </button>
           </Link>
         </div>
@@ -627,7 +627,7 @@ const Game1: React.FC<{
           <br />
           <Link href="/profile" passHref>
             <button type="button" className="btn btn-warning" style={{color:"white"}}>
-              Back to my Profile &rarr;
+              Retour au profil &rarr;
             </button>
           </Link>
         </div>
@@ -745,7 +745,7 @@ const Game1: React.FC<{
                 style={{color:"white"}}
                 onClick={() => endOfManche()}
               >
-                Next question &rarr;
+                Question suivante &rarr;
               </button>
             </div>
             <br></br>

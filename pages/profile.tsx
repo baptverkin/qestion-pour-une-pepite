@@ -170,8 +170,8 @@ const Profile: React.FC<{
               <tr>
                 <th scope="col" style={{fontSize:"25px"}}>#</th>
                 <th scope="col" style={{fontSize:"25px"}}>Pseudo</th>
-                <th scope="col" style={{fontSize:"25px"}}>PlayedGames</th>
-                <th scope="col" style={{fontSize:"25px"}}>Victories</th>
+                <th scope="col" style={{fontSize:"25px"}}>Parties jouées</th>
+                <th scope="col" style={{fontSize:"25px"}}>Victoires</th>
               </tr>
             </thead>
             <tbody>

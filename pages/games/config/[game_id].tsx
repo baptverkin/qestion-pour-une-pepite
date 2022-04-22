@@ -189,7 +189,7 @@ const GameConfig: React.FC<{
         />
         <br />
         <Button variant="warning" onClick={handler} disabled={loading || disableFull} style={{color:"white"}}>
-          Join party
+          Rejoindre la partie
         </Button>
         <br />
         <br />
