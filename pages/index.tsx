@@ -31,7 +31,7 @@ const Home: React.FC<{ userDB: any; session: any }> = ({ userDB, session }) => {
       <div className={styles.container}>
         <main className={styles.main}>
           <h3 className={styles.title}>
-<Image src={"/images/logo_qpup_transparent.png"} alt= "logo" width="600px" height="350px" ></Image>
+<Image src={"/images/logo_qpup_transparent.png"} alt= "logo" width="600px" height="350px" style={{marginTop:"0"}} ></Image>
           </h3>
           <p >
             {userDB ? `Joueur actuellement connecté : ${userDB.pseudo}` : ""}

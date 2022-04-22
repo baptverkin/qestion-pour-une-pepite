@@ -126,20 +126,20 @@ const GameConfig: React.FC<{
 
   return (
     <Layout>
-      <div className="container">
+      <div className="container" style={{marginTop:"2em"}}>
         <h3>Configurer la partie :</h3>
         <br />
         <DisplayNames channel={channel} />
         <br />
-        <Button onClick={handler} disabled={loading}>
-          Join party
+        <Button onClick={handler} disabled={loading} variant="warning" style={{ color:"white"}}>
+          Rejoindre la partie
         </Button>
         <br />
         <br />
         <br />
         <br />
         <br />
-        <Button onClick={handleSubmit}>Lancer la partie &rarr;</Button>
+        <Button onClick={handleSubmit} style={{fontSize:"30px"}}>Lancer la partie &rarr;</Button>
       </div>
     </Layout>
   );

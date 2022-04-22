@@ -72,8 +72,8 @@ const Profile: React.FC<{
   return (
     <>
       <Layout>
-        <div className="container">
-          <h2>
+        <div className="container" style={{marginTop:"2em"}}>
+          <h2 >
             Bonjour {pseudo}&nbsp;&nbsp;&nbsp;
             <Link href="/form" passHref>
               <Image
@@ -103,7 +103,7 @@ const Profile: React.FC<{
             // textAlign: "center",
             marginLeft: "100px",
             marginRight: "100px",
-            backgroundColor: "purple"
+            backgroundColor: "brown"
           }}
         >
           <Tabs defaultActiveKey="first">
@@ -120,7 +120,7 @@ const Profile: React.FC<{
                 Défie des IAs et devient le champion du 9 points gagnants
               </p>
             </Tab>
-            <Tab eventKey="third" title="Règles" className="container">
+            <Tab eventKey="third" title="Règles" className="container" >
               <p style={{ marginBottom: "1em", marginTop: "1em" }}>
                 <strong>Règles du jeu : </strong>
                 Quatre candidats sont en lice et doivent répondre à des
@@ -170,8 +170,8 @@ const Profile: React.FC<{
               <tr>
                 <th scope="col" style={{fontSize:"25px"}}>#</th>
                 <th scope="col" style={{fontSize:"25px"}}>Pseudo</th>
-                <th scope="col" style={{fontSize:"25px"}}>PlayedGames</th>
-                <th scope="col" style={{fontSize:"25px"}}>Victories</th>
+                <th scope="col" style={{fontSize:"25px"}}>Parties jouées</th>
+                <th scope="col" style={{fontSize:"25px"}}>Victoires</th>
               </tr>
             </thead>
             <tbody>
