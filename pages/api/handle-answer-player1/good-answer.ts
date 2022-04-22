@@ -18,6 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const APP_SECRET = process.env.APP_SECRET || "";
   const APP_CLUSTER = process.env.APP_CLUSTER || "";
   const pseudo = req.body.pseudo;
+  const player1Score = req.body.player1
 
   const pusher = new Pusher({
     appId: APP_ID,
@@ -30,6 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     clickedResponse : clickedResponse,
     pseudo : pseudo,
     points: points,
+    player1Score: player1Score,
   });
 
   const mongodb = await getDatabase();
